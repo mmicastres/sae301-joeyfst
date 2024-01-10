@@ -1,0 +1,41 @@
+{% extends "index.html.twig" %}
+
+{% block section %}
+
+	{% if acces == "oui" %}
+	<a href="?action=ajoutprojet" class="btn btn-primary">
+		Ajouter un projet
+	</a>
+	{% endif %}
+
+
+	<table class="table table-hover table-sm">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Titre</th>
+				<th>Description</th>
+				<th>Démo</th>
+				<th>Source</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for projet in projets %}
+				{% if projet.valideadmin == 1 %}
+					<tr>
+						<td>{{projet.idprojet}}</td>
+						<td>{{projet.titre}}</td>
+						<td>{{projet.description}}</td>
+						<td>{{projet.demo}}</td>
+						<td>{{projet.source}}</td>
+						<td>
+								<a href="?action=infoprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-primary">
+									Voir plus
+								</a>
+						</td>
+					</tr>
+				{% endif %}
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}

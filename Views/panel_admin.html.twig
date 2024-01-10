@@ -1,0 +1,102 @@
+{% extends "index.html.twig" %}
+
+{% block section %}
+{{message}}
+<h2>Projets à valider</h2>
+<table class="table table-hover table-sm">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Titre</th>
+				<th>Description</th>
+				<th>Démo</th>
+				<th>Source</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for projet in projets %}
+					<tr>
+						<td>{{projet.idprojet}}</td>
+						<td>{{projet.titre}}</td>
+						<td>{{projet.description}}</td>
+						<td>{{projet.demo}}</td>
+						<td>{{projet.source}}</td>
+						<td>
+								<a href="?action=infoprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-primary">
+									Voir plus
+								</a>
+                                <a href="?action=validerprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-primary">
+									Valider le projet
+								</a>
+						</td>
+					</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+<h2>Ajouter...</h2>
+
+<h3>Une ressource :</h3>
+
+<h3>Une catégorie :</h3>
+
+<h2>Liste des utilisateurs</h2>
+
+<table class="table table-hover table-sm">
+		<thead>
+			<tr>
+				<th>Nom</th>
+				<th>Prenom</th>
+				<th>Photo</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for membre in membres %}
+					<tr>
+						<td>{{membre.nom}}</td>
+						<td>{{membre.prenom}}</td>
+						<td><img id="pdp" src="./Views/imgprofil/{{membre.photo}}" alt="photodeprofil"></td>
+						<td>
+								<a href="?action=modifiermembre&idmembre={{membre.idmembre}}" name="idmembre" value="{{membre.idmembre}}" class="btn btn-primary">
+									Modifier le membre
+								</a>
+						</td>
+					</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+<h2>Liste des projets</h2>
+
+<table class="table table-hover table-sm">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Titre</th>
+				<th>Description</th>
+				<th>Démo</th>
+				<th>Source</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for projet in projetsvalides %}
+					<tr>
+						<td>{{projet.idprojet}}</td>
+						<td>{{projet.titre}}</td>
+						<td>{{projet.description}}</td>
+						<td>{{projet.demo}}</td>
+						<td>{{projet.source}}</td>
+						<td>
+								<a href="?action=infoprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-primary">
+									Voir plus
+								</a>
+                                <a href="?action=validerprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-primary">
+									Modifier le projet
+								</a>
+						</td>
+					</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "index.html.twig" %}
+
+{% block section %}
+
+<form method="post" action="index.php" class="well" enctype="multipart/form-data">
+<fieldset>
+  <legend>Veuillez créer votre compte</legend>
+  <div class="form-group row">
+      <label for="nom" class="col-sm-2 col-form-label col-form-label-sm">Nom</label>
+      <div class="col-sm-6">
+        <input  type="text" id="nom" class="form-control form-control-sm" name="nom" required placeholder="" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="prenom" class="col-sm-2 col-form-label col-form-label-sm">Prenom</label>
+      <div class="col-sm-6">
+        <input  type="text" id="prenom" class="form-control form-control-sm" name="prenom" required placeholder="" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="email" class="col-sm-2 col-form-label col-form-label-sm">Email</label>
+      <div class="col-sm-6">
+        <input  type="text" id="email" class="form-control form-control-sm" name="email" required placeholder="" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="idiut" class="col-sm-2 col-form-label col-form-label-sm">Identifiant IUT</label>
+      <div class="col-sm-6">
+        <input  type="text" id="idiut" class="form-control form-control-sm" name="idiut" required placeholder="" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="mdp" class="col-sm-2 col-form-label col-form-label-sm">Mot de passe</label>
+      <div class="col-sm-6">
+        <input  type="password" id="mdp" class="form-control form-control-sm" name="mdp" required placeholder="" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="annee" class="col-sm-2 col-form-label col-form-label-sm">Année de naissance</label>
+      <div class="col-sm-6">
+        <input  type="date" id="annee" class="form-control form-control-sm" name="anneenaissance" required placeholder="" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="tel" class="col-sm-2 col-form-label col-form-label-sm">Téléphone portable</label>
+      <div class="col-sm-6">
+        <input  type="tel" id="tel" class="form-control form-control-sm" name="telportable" required placeholder="" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="pdp" class="col-sm-2 col-form-label col-form-label-sm">Photo de profil</label>
+      <div class="col-sm-6">
+        <input  type="file" accept="image/png, image/jpeg" id="pdp" class="form-control form-control-sm" name="photo" required placeholder="" />
+      </div>
+    </div>
+    <input  type="hidden" id="admin" name="admin" value="0" />
+  <input type="submit" name="inscription" value="inscription"/>
+</fieldset>
+</form>
+
+{% endblock %}

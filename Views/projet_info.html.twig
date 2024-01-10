@@ -1,0 +1,56 @@
+{% extends "index.html.twig" %}
+
+{% block section %}
+    {% if estContributeur == true %}
+    <a class="btn btn-primary" href="?action=modifprojet&idprojet={{projet.idprojet}}">Modifier le projet</a>
+    {% endif %}
+	<table class="table table-hover table-sm">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Titre</th>
+				<th>Description</th>
+				<th>Démo</th>
+				<th>Source</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>{{projet.idprojet}}</td>
+				<td>{{projet.titre}}</td>
+				<td>{{projet.description}}</td>
+				<td>{{projet.demo}}</td>
+				<td>{{projet.source}}</td>
+			</tr>
+		</tbody>
+	</table>
+
+    <p>Catégories :</p>
+    {% for categorie in categories %}
+        {{categorie.nomcategorie}}
+    {% endfor %}
+
+    <p>Tags :</p>
+    {% for tag in tags %}
+        {{tag.nomtag}}
+    {% endfor %}
+
+    <p>Images :</p>
+    {% for image in images %}
+    <img src="./Views/imgprojet/{{image.lienimage}}" alt="photoprojet">
+    {% endfor %}
+
+    <p>Ressources :</p>
+    {% for ressource in ressources %}
+        {{ressource.semestre}}
+        {{ressource.intitule}}
+        {{ressource.identifiant}}
+    {% endfor %}
+
+    <p>Contributeurs :</p>
+    {% for contributeur in contributeurs %}
+        {{contributeur.nom}}
+        {{contributeur.prenom}}
+    <img src="./Views/imgprofil/{{contributeur.photo}}" alt="photodeprofil">
+    {% endfor %}
+{% endblock %}

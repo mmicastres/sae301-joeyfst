@@ -1,0 +1,111 @@
+{% extends "index.html.twig" %}
+
+{% block section %}
+
+{% if estContributeur == false %}
+
+<p>Vous n'avez pas les droits pour modifier ce projet</p>
+
+{% else %}
+
+<form method="post" action="index.php" class="well" enctype="multipart/form-data">
+   <fieldsetclass="form-group">
+    <legend>Modifier le projet</legend>
+
+    <!-- Section projet -->
+    <div class="form-group row">
+      <label for="titre" class="col-sm-2 col-form-label col-form-label-sm">Titre</label>
+      <div class="col-sm-10">
+        <input  type="text" id="titre" class="form-control form-control-sm" name="titre" required placeholder="{{projet.titre}}" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="description" class="col-sm-2 col-form-label col-form-label-sm">Description</label>
+      <div class="col-sm-10">
+        <input type="text" id="description" class="form-control form-control-sm" name="description" required placeholder="{{projet.description}}"/>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="demo" class="col-sm-2 col-form-label col-form-label-sm">Lien démo</label>
+      <div class="col-sm-10">
+        <input  type="text" id="demo" class="form-control form-control-sm" name="demo" required placeholder="{{projet.demo}}"/>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="source" class="col-sm-2 col-form-label col-form-label-sm">Lien source</label>
+      <div class="col-sm-10">
+        <input type="test" id="source" class="form-control form-control-sm" name="source" required placeholder="{{projet.source}}"/>
+      </div>
+    </div>
+
+    <!-- section catégories -->
+    <div class="form-group row">
+      <label for="categories" class="col-sm-2 col-form-label col-form-label-sm">Catégories :</label>
+      <select id="categories" name="categories">
+      {% for categorie in allCategories %}
+        {% if categories.idcategorie == categorie.idcategorie %}
+          <option selected="selected" value="{{categorie.idcategorie}}">{{categorie.nomcategorie}}</option>
+        {% else %}
+          <option value="{{categorie.idcategorie}}">{{categorie.nomcategorie}}</option>
+        {% endif %}
+      {% endfor %}
+      </select>
+    </div>
+
+    <!-- section tags -->
+    <div class="form-group row">
+      <label for="tags" class="col-sm-2 col-form-label col-form-label-sm">Tags :</label>
+      <select id="tags" name="tags">
+      {% for tag in allTags %}
+        {% if tags.idtag == tag.idtag %}
+          <option selected="selected" value="{{tag.idtag}}">{{tag.nomtag}}</option>
+        {% else %}
+          <option value="{{tag.idtag}}">{{tag.nomtag}}</option>
+        {% endif %}
+      {% endfor %}
+      </select>
+    </div>
+
+    <!-- section ressources -->
+    <div class="form-group row">
+      <label for="ressources" class="col-sm-2 col-form-label col-form-label-sm">Ressources :</label>
+      <select id="ressources" name="ressources">
+      {% for ressource in allRessources %}
+        {% if ressources.idressource == ressource.idressource %}
+          <option selected="selected" value="{{ressource.idressource}}">{{ressource.intitule}}</option>
+        {% else %}
+          <option value="{{ressource.idressource}}">{{ressource.intitule}}</option>
+        {% endif %}
+      {% endfor %}
+      </select>
+    </div>
+
+    <!-- section contributeurs -->
+    <div class="form-group row">
+      <label for="contributeurs" class="col-sm-2 col-form-label col-form-label-sm">Contributeurs :</label>
+      <select id="contributeurs" name="contributeurs">
+      {% for contributeur in allUsers %}
+        {% if contributeurs.idmembre == contributeur.idmembre %}
+          <option selected="selected" value="{{contributeur.idmembre}}">{{contributeur.nom}}</option>
+        {% else %}
+          <option value="{{contributeur.idmembre}}">{{contributeur.nom}}</option>
+        {% endif %}
+      {% endfor %}
+      </select>
+    </div>
+
+    <!-- section images -->
+    <label for="images">Images du projet :</label>
+    <input type="file" id="images"  name="images" accept="image/png, image/jpeg" />
+
+    <!-- idmembre = celui de l'utilisateur connecté    -->
+    <input  type="hidden" id="idmembre" name="idmembre" value="{{ idmembre }}"/> 
+    <input  type="hidden" id="idprojet" name="idprojet" value="{{ projet.idprojet }}"/> 
+    <input  type="hidden" id="valideadmin" name="valideadmin" value="{{ projet.valideadmin }}"/> 
+
+	  <input type="submit" class="btn btn-primary" name="valider_modif" value="valider"/>
+   </fieldset>
+   </form>
+  <a class="btn btn-primary" href="?action=supprimerprojet&idprojet={{projet.idprojet}}">Supprimer le projet</a>
+   {% endif %}
+{% endblock %}
