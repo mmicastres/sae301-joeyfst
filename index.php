@@ -129,4 +129,15 @@ if (isset($_GET['action']) && $_GET['action']=="validerprojet"){
   $adminController->validerProjet($_GET);
 }
 
-// ?>
+if (isset($_POST["admin_categorie"])){
+  $adminController->adminCategorie();
+}
+
+if (isset($_GET['action']) && $_GET['action']=="modifiermembre") {
+  $adminController->formModifierMembre($_SESSION['admin']);
+}
+
+if (isset($_POST['adminmembre'])){
+  $adminController->modifierMembre();
+}
+?>

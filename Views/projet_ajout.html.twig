@@ -32,57 +32,57 @@
     </div>
 
     <!-- section catégories -->
-    <div class="form-group row">
+    <div class="form-group row" name="super">
       <label for="categories" class="col-sm-2 col-form-label col-form-label-sm">Catégories :</label>
-      <select id="categories" name="categories">
-      <option value="" selected disabled hidden>Choisir ici</option>
-      {% for categorie in categories %}
-        <option value="{{categorie.idcategorie}}">{{categorie.nomcategorie}}</option>
-      {% endfor %}
+      <select id="categories" class="selectcategories" name="categories">
+        <option value="" selected disabled hidden>Choisir ici</option>
+        {% for categorie in categories %}
+          <option class="optioncategories" value="{{categorie.idcategorie}}">{{categorie.nomcategorie}}</option>
+        {% endfor %}
       </select>
     </div>
 
     <!-- section tags -->
     <div class="form-group row">
       <label for="tags" class="col-sm-2 col-form-label col-form-label-sm">Tags :</label>
-      <select id="tags" name="tags">
-      <option value="" selected disabled hidden>Choisir ici</option>
-      {% for tag in tags %}
-        <option value="{{tag.idtag}}">{{tag.nomtag}}</option>
-      {% endfor %}
+      <select id="tags" class="selecttags" name="tags">
+        <option value="" selected disabled hidden>Choisir ici</option>
+        {% for tag in tags %}
+          <option class="optiontags" value="{{tag.idtag}}">{{tag.nomtag}}</option>
+        {% endfor %}
       </select>
     </div>
 
     <!-- section ressources -->
     <div class="form-group row">
       <label for="ressources" class="col-sm-2 col-form-label col-form-label-sm">Ressources :</label>
-      <select id="ressources" name="ressources">
-      <option value="" selected disabled hidden>Choisir ici</option>
-      {% for ressource in ressources %}
-        <option value="{{ressource.idressource}}">{{ressource.intitule}}</option>
-      {% endfor %}
+      <select id="ressources" class="selectressources" name="ressources">
+        <option value="" selected disabled hidden>Choisir ici</option>
+        {% for ressource in ressources %}
+          <option class="optionressources" value="{{ressource.idressource}}">{{ressource.intitule}} - {{ressource.identifiant}}</option>
+        {% endfor %}
       </select>
     </div>
 
     <!-- section contributeurs -->
     <div class="form-group row">
       <label for="contributeurs" class="col-sm-2 col-form-label col-form-label-sm">Contributeurs :</label>
-      <select id="contributeurs" name="contributeurs">
-      <option value="" selected disabled hidden>Choisir ici</option>
-      {% for contributeur in membres %}
-        <option value="{{contributeur.idmembre}}">{{contributeur.nom}}</option>
-      {% endfor %}
+      <select id="contributeurs" class="selectcontributeurs" name="contributeurs">
+        <option value="" selected disabled hidden>Choisir ici</option>
+        {% for contributeur in membres %}
+          <option class="optioncontributeurs" value="{{contributeur.idmembre}}">{{contributeur.nom}}</option>
+        {% endfor %}
       </select>
     </div>
 
     <!-- section images -->
     <label for="images">Images du projet :</label>
-    <input type="file" id="images"  name="images" accept="image/png, image/jpeg" />
+    <input type="file" id="images" class="selectimages" name="images" accept="image/png, image/jpeg" />
 
     <!-- idmembre = celui de l'utilisateur connecté    -->
     <input  type="hidden" id="idmembre" name="idmembre" value="{{ idmembre }}"/> 
     <!-- valideadmin = forcément égal à 0    -->
-    <input  type="hidden" id="valideadmin" name="valideadmin" value="1"/>
+    <input  type="hidden" id="valideadmin" name="valideadmin" value="0"/>
 
 	  <input type="submit" class="btn btn-primary" name="valider_ajout" value="valider"/>
    </fieldset>

@@ -282,7 +282,7 @@ class ProjetManager
 	{
 		$req = "INSERT INTO Ajoutercat (Id, Id_1) VALUES (?,?)";
 		$stmt = $this->_db->prepare($req);
-		$res = $stmt->execute(array($idprojet, $idcategorie));
+		$stmt->execute(array($idprojet, $idcategorie));
 		// pour debuguer les requêtes SQL
 		$errorInfo = $stmt->errorInfo();
 		if ($errorInfo[0] != 0) {
@@ -295,7 +295,7 @@ class ProjetManager
 	{
 		$req = "INSERT INTO Ajoutertag (Id, Id_1) VALUES (?,?)";
 		$stmt = $this->_db->prepare($req);
-		$res = $stmt->execute(array($idprojet, $idtag));
+		$stmt->execute(array($idprojet, $idtag));
 		// pour debuguer les requêtes SQL
 		$errorInfo = $stmt->errorInfo();
 		if ($errorInfo[0] != 0) {
@@ -308,7 +308,7 @@ class ProjetManager
 	{
 		$req = "INSERT INTO Contexte (Id, Id_1) VALUES (?,?)";
 		$stmt = $this->_db->prepare($req);
-		$res = $stmt->execute(array($idprojet, $idressource));
+		$stmt->execute(array($idprojet, $idressource));
 		// pour debuguer les requêtes SQL
 		$errorInfo = $stmt->errorInfo();
 		if ($errorInfo[0] != 0) {
@@ -321,7 +321,7 @@ class ProjetManager
 	{
 		$req = "INSERT INTO A_contribue (Id, Id_1) VALUES (?,?)";
 		$stmt = $this->_db->prepare($req);
-		$res = $stmt->execute(array($idprojet, $idmembre));
+		$stmt->execute(array($idprojet, $idmembre));
 		// pour debuguer les requêtes SQL
 		$errorInfo = $stmt->errorInfo();
 		if ($errorInfo[0] != 0) {
@@ -341,7 +341,7 @@ class ProjetManager
 
 		$req = "INSERT INTO Images (idimage, lienimage) VALUES (?,?)";
 		$stmt = $this->_db->prepare($req);
-		$res = $stmt->execute(array($idimg, $nomimg));
+		$stmt->execute(array($idimg, $nomimg));
 		// pour debuguer les requêtes SQL
 		$errorInfo = $stmt->errorInfo();
 		if ($errorInfo[0] != 0) {

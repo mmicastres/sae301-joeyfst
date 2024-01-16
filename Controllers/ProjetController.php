@@ -40,7 +40,11 @@ class ProjetController
 		$images = $this->projetManager->projetImages($idprojet);
 		$ressources = $this->projetManager->projetRessources($idprojet);
 		$contributeurs = $this->projetManager->projetContributeurs($idprojet);
-		$estContributeur = $this->projetManager->verifContributeur($idprojet, $_SESSION['idmembre']);
+		if (isset($_SESSION['idmembre'])) {
+			$estContributeur = $this->projetManager->verifContributeur($idprojet, $_SESSION['idmembre']);
+		}else{
+			$estContributeur = false;
+		}
 		echo $this->twig->render('projet_info.html.twig', array('projet' => $projet, 'categories' => $categories, 'tags' => $tags, 'images' => $images, 'ressources' => $ressources, 'contributeurs' => $contributeurs, 'estContributeur' => $estContributeur, 'acces' => $_SESSION['acces'], 'admin' => $_SESSION['admin']));
 	}
 

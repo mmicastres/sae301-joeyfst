@@ -36,9 +36,28 @@
 
 <h2>Ajouter...</h2>
 
-<h3>Une ressource :</h3>
+<form method="post" action="index.php" class="well">
+<fieldset="form-group">
+<legend>Une ressource :</legend>
+	<label for="semestre" class="col-sm-2 col-form-label col-form-label-sm">Semestre</label>
+    <select id="semestre" class="form-control form-control-sm" name="semestre" />
+		<option value="S1">S1</option>
+		<option value="S2">S2</option>
+		<option value="S3">S3</option>
+		<option value="S4">S4</option>
+		</select>
+	<label for="intitule" class="col-sm-2 col-form-label col-form-label-sm">Code de la ressource</label>
+	<input type="text" id="intitule" class="form-control form-control-sm" name="intitule" placeholder="Ex R101..." />
+	<label for="titre" class="col-sm-2 col-form-label col-form-label-sm">Nom</label>	
+    <input type="text" id="nomcomplet" class="form-control form-control-sm" name="nomcomplet" placeholder="Nom complet de la ressource" />
+<legend>Une catégorie :</legend>
+    <input  type="text" id="categorie" class="form-control form-control-sm" name="categorie" placeholder="Nom de la catégorie" />
+<legend>Un tag :</legend>
+    <input  type="text" id="tag" class="form-control form-control-sm" name="tag" placeholder="Nom du tag" />
+<input type="submit" class="btn btn-primary" name="admin_categorie" value="valider"/>
 
-<h3>Une catégorie :</h3>
+</fieldset>
+</form>
 
 <h2>Liste des utilisateurs</h2>
 

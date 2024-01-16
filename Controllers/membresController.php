@@ -51,7 +51,7 @@ class MembreController
 
 		// insertion des nouvelles données dans la table
 		$membre = new Membre($_POST);
-		$ok = $this->membreManager->new_inscription($membre);
+		$this->membreManager->new_inscription($membre);
 
 		// recupération du fichier photo
 		// filtre de sécurité pour empêcher n'importe qui d'envoyer du code exécutable (PHP notamment)
@@ -100,7 +100,8 @@ class MembreController
 	{
 		$_SESSION['acces'] = "non"; // acces non autorisé
 		$_SESSION['admin'] = 0; // plus de droits d'admin
-		$message = "vous êtes déconnecté";
+		$_SESSION['idmembre'] = 0;
+		$message = "Vous avez été déconnecté";
 		echo $this->twig->render('index.html.twig', array('acces' => $_SESSION['acces'], 'message' => $message));
 	}
 
@@ -137,7 +138,7 @@ class MembreController
 		echo $this->twig->render('espace_utilisateur.html.twig', array('infos' => $infos, 'projets' => $projets, 'acces' => $_SESSION['acces'], 'admin' => $_SESSION['admin']));
 	}
 
-	function changerPdp($data)
+	function changerPdp()
 	{
         $extensions = array('jpg', 'png', 'jpeg', 'gif');
 		if (isset($_FILES["photo"]["name"])) {
