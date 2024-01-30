@@ -2,40 +2,77 @@
 
 {% block section %}
 
-	{% if acces == "oui" %}
-	<a href="?action=ajoutprojet" class="btn btn-primary">
-		Ajouter un projet
-	</a>
-	{% endif %}
+	<div class="d-flex justify-content-between">
+		<h2>Rechercher par :</h2>
+		{% if acces == "oui" %}
+			<a href="?action=ajoutprojet" class="btn btn-dark">
+				Ajouter un projet
+			</a>
+		{% else %}
+			<a class="btn btn-dark disabled" role="button" aria-disabled="true">Ajouter un projet</a>
+		{% endif %}
+	</div>
 
+	<form method="post" action="index.php" class="well">
+		<input type="text" id="titre" class="form-control form-control-sm" name="titre" placeholder="Titre du projet"/>
+		<input
+		type="text" id="description" class="form-control form-control-sm" name="description" placeholder="Description du projet"/>
 
-	<table class="table table-hover table-sm">
-		<thead>
-			<tr>
-				<th>Id</th>
-				<th>Titre</th>
-				<th>Description</th>
-				<th>Démo</th>
-				<th>Source</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for projet in projets %}
-				{% if projet.valideadmin == 1 %}
-					<tr>
-						<td>{{projet.idprojet}}</td>
-						<td>{{projet.titre}}</td>
-						<td>{{projet.description}}</td>
-						<td>{{projet.demo}}</td>
-						<td>{{projet.source}}</td>
-						<td>
-								<a href="?action=infoprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-primary">
-									Voir plus
-								</a>
-						</td>
-					</tr>
-				{% endif %}
-			{% endfor %}
-		</tbody>
-	</table>
+		<!-- section catégories -->
+		<div class="form-group row">
+			<label for="categories" class="col-sm-2 col-form-label col-form-label-sm">Catégories :</label>
+			<select id="categories" class="form-select" name="categories">
+				<option value="" selected disabled hidden>Choisir ici</option>
+				{% for categorie in categories %}
+					<option value="{{categorie.idcategorie}}">{{categorie.nomcategorie}}</option>
+				{% endfor %}
+			</select>
+		</div>
+
+		<!-- section tags -->
+		<div class="form-group row">
+			<label for="tags" class="col-sm-2 col-form-label col-form-label-sm">Tags :</label>
+			<select id="tags" class="form-select" name="tags">
+				<option value="" selected disabled hidden>Choisir ici</option>
+				{% for tag in tags %}
+					<option value="{{tag.idtag}}">{{tag.nomtag}}</option>
+				{% endfor %}
+			</select>
+		</div>
+
+		<!-- section ressources -->
+		<div class="form-group row">
+			<label for="ressources" class="col-sm-2 col-form-label col-form-label-sm">Ressources :</label>
+			<select id="ressources" class="form-select" name="ressources">
+				<option value="" selected disabled hidden>Choisir ici</option>
+				{% for ressource in ressources %}
+					<option value="{{ressource.idressource}}">{{ressource.intitule}}
+						-
+						{{ressource.identifiant}}</option>
+				{% endfor %}
+			</select>
+		</div>
+
+		<input type="submit" class="btn btn-dark mt-2" name="recherche" value="Valider"/>
+	</form>
+
+	<div class="container d-flex justify-content-around row gap-3">
+		{% for projet in projets %}
+
+			{% if projet.valideadmin == 1 %}
+
+				<div class="col mb-4 mx-auto">
+					<div class="card" style="width: 18rem;">
+						<img src="./Views/imgprojet/{{images.lienimage}}" class="card-img-top" alt="{{images.lienimage}}">
+						<div class="card-body">
+							<h5 class="card-title">{{projet.titre}}</h5>
+							<p class="card-text">{{projet.description}}</p>
+							<a href="?action=infoprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-dark">Voir plus</a>
+						</div>
+					</div>
+				</div>
+
+			{% endif %}
+		{% endfor %}
+	</div>
 {% endblock %}

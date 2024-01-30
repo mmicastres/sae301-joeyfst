@@ -2,87 +2,74 @@
 
 {% block section %}
 
-<h2>Mes informations</h2>
+	<h2 class="mb-4">Mes informations</h2>
 
-<fieldset>
-  <div class="form-group row">
-      <label for="nom" class="col-sm-2 col-form-label col-form-label-sm">Nom</label>
-      <div class="col-sm-6">
-        <input  type="text" id="nom" readonly class="form-control form-control-sm" name="nom" required placeholder={{ infos.nom }} />
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="prenom" class="col-sm-2 col-form-label col-form-label-sm">Prenom</label>
-      <div class="col-sm-6">
-        <input  type="text" id="prenom" readonly class="form-control form-control-sm" name="prenom" required placeholder={{ infos.prenom }} />
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="email" class="col-sm-2 col-form-label col-form-label-sm">Email</label>
-      <div class="col-sm-6">
-        <input  type="text" id="email" readonly class="form-control form-control-sm" name="email" required placeholder={{ infos.email }} />
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="idiut" class="col-sm-2 col-form-label col-form-label-sm">Identifiant IUT</label>
-      <div class="col-sm-6">
-        <input  type="text" id="idiut" readonly class="form-control form-control-sm" name="idiut" required placeholder={{ infos.idiut }} />
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="annee" class="col-sm-2 col-form-label col-form-label-sm">Année de naissance</label>
-      <div class="col-sm-6">
-        <input  type="text" id="annee" readonly class="form-control form-control-sm" name="anneenaissance" required placeholder={{ infos.anneenaissance }} />
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="tel" class="col-sm-2 col-form-label col-form-label-sm">Téléphone portable</label>
-      <div class="col-sm-6">
-        <input  type="tel" id="tel" readonly class="form-control form-control-sm" name="telportable" required placeholder={{ infos.telportable }} />
-      </div>
-    </div>
-</fieldset>
+	<fieldset>
+		<div class="form-group row">
+			<label for="nom" class="col-sm-2 col-form-label col-form-label-sm">Nom</label>
+			<div class="col-sm-6">
+				<input type="text" id="nom" readonly class="form-control form-control-sm" name="nom" required placeholder={{ infos.nom }}>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="prenom" class="col-sm-2 col-form-label col-form-label-sm">Prenom</label>
+			<div class="col-sm-6">
+				<input type="text" id="prenom" readonly class="form-control form-control-sm" name="prenom" required placeholder={{ infos.prenom }}>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="email" class="col-sm-2 col-form-label col-form-label-sm">Email</label>
+			<div class="col-sm-6">
+				<input type="text" id="email" readonly class="form-control form-control-sm" name="email" required placeholder={{ infos.email }}>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="idiut" class="col-sm-2 col-form-label col-form-label-sm">Identifiant IUT</label>
+			<div class="col-sm-6">
+				<input type="text" id="idiut" readonly class="form-control form-control-sm" name="idiut" required placeholder={{ infos.idiut }}>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="annee" class="col-sm-2 col-form-label col-form-label-sm">Année de naissance</label>
+			<div class="col-sm-6">
+				<input type="text" id="annee" readonly class="form-control form-control-sm" name="anneenaissance" required placeholder={{ infos.anneenaissance }}>
+			</div>
+		</div>
+	</fieldset>
 
-<img id="pdp" src="./Views/imgprofil/{{infos.photo}}" alt="photodeprofil">
-
-<form method="post" action="index.php" class="well" enctype="multipart/form-data">
-<label for="photo">Changer de photo de profil :</label>
-
-<input type="file" id="photo"  name="photo" accept="image/png, image/jpeg" />
-<input type="hidden" id="anciennepdp" name="anciennepdp" value="{{infos.photo}}"/>
-<input type="submit" class="btn btn-primary" name="changementpdp" value="changementpdp">
-</form>
-
-	<a href="?action=ajoutprojet" class="btn btn-primary">
-		Ajouter un projet
+	<a href="?action=modifiermembre&idmembre={{infos.idmembre}}" name="idmembre" value="{{infos.idmembre}}" class="btn btn-dark mt-3">
+		Modifier mes informations
 	</a>
-	<table class="table table-hover table-sm">
-		<thead>
-			<tr>
-				<th>Id</th>
-				<th>Titre</th>
-				<th>Description</th>
-				<th>Démo</th>
-				<th>Source</th>
-			</tr>
-		</thead>
-		<tbody>
-{% for projet in projets %}
-					<tr>
-						<td>{{projet.idprojet}}</td>
-						<td>{{projet.titre}}</td>
-						<td>{{projet.description}}</td>
-						<td>{{projet.demo}}</td>
-						<td>{{projet.source}}</td>
-						<td>
-								<a href="?action=infoprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-primary">
-									Voir plus
-								</a>
-						</td>
-					</tr>
-			{% endfor %}
-		</tbody>
-	</table>
 
+	<div class="container mb-4 justify-content-start align-item-start">
+		<form method="post" action="index.php" class="well" enctype="multipart/form-data">
+			<img id="photodeprofilespaceutilisateur" src="./Views/imgprofil/{{infos.photo}}" alt="photodeprofil">
+			<div>
+				<label for="photo">Changer de photo de profil :</label>
+				<input type="file" id="photo" name="photo" accept="image/png, image/jpeg"/>
+				<input type="hidden" id="anciennepdp" name="anciennepdp" value="{{infos.photo}}"/>
+			</div>
+			<input type="submit" class="btn btn-dark mt-3" name="changementpdp" value="Changer de photo de profil">
+		</div>
+	</form>
+</div>
 
-{% endblock %}
+<a href="?action=ajoutprojet" class="ms-5 btn btn-dark mb-3">
+	Ajouter un projet
+</a>
+
+<div class="container d-flex justify-content-around row gap-3">
+	{% for projet in projets %}
+		<div class="col mb-4 mx-auto">
+			<div class="card" style="width: 18rem;">
+				<img src="./Views/imgprojet/{{images.lienimage}}" class="card-img-top" alt="{{images.lienimage}}">
+				<div class="card-body">
+					<h5 class="card-title">{{projet.titre}}</h5>
+					<p class="card-text">{{projet.description}}</p>
+					<a href="?action=infoprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-dark">Voir plus</a>
+				</div>
+			</div>
+		</div>
+
+	{% endfor %}
+</div>{% endblock %}

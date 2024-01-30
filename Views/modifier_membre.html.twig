@@ -2,55 +2,45 @@
 
 {% block section %}
 
-<h2>Mes informations</h2>
-<form method="post" action="index.php" class="well" enctype="multipart/form-data">
 
-<fieldset>
-  <div class="form-group row">
-      <label for="nom" class="col-sm-2 col-form-label col-form-label-sm">Nom</label>
-      <div class="col-sm-6">
-        <input  type="text" id="nom" class="form-control form-control-sm" name="nom" required placeholder={{ infos.nom }} />
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="prenom" class="col-sm-2 col-form-label col-form-label-sm">Prenom</label>
-      <div class="col-sm-6">
-        <input  type="text" id="prenom" class="form-control form-control-sm" name="prenom" required placeholder={{ infos.prenom }} />
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="email" class="col-sm-2 col-form-label col-form-label-sm">Email</label>
-      <div class="col-sm-6">
-        <input  type="text" id="email" class="form-control form-control-sm" name="email" required placeholder={{ infos.email }} />
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="idiut" class="col-sm-2 col-form-label col-form-label-sm">Identifiant IUT</label>
-      <div class="col-sm-6">
-        <input  type="text" id="idiut" class="form-control form-control-sm" name="idiut" placeholder={{ infos.idiut }} />
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="annee" class="col-sm-2 col-form-label col-form-label-sm">Année de naissance</label>
-      <div class="col-sm-6">
-        <input  type="text" id="annee" class="form-control form-control-sm" name="anneenaissance" placeholder={{ infos.anneenaissance }} />
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="tel" class="col-sm-2 col-form-label col-form-label-sm">Téléphone portable</label>
-      <div class="col-sm-6">
-        <input  type="tel" id="tel" class="form-control form-control-sm" name="telportable" placeholder={{ infos.telportable }} />
-      </div>
-    </div>
-</fieldset>
+	<h2>Mes informations</h2>
+	<form method="post" action="index.php" class="well" enctype="multipart/form-data">
 
-<img id="pdp" src="./Views/imgprofil/{{infos.photo}}" alt="photodeprofil">
-<label for="photo">Changer de photo de profil :</label>
-<input type="file" id="photo"  name="photo" accept="image/png, image/jpeg" />
-<input type="hidden" id="anciennepdp" name="anciennepdp" value="{{infos.photo}}"/>
+		<fieldset>
+			<div class="form-group row">
+				<label for="nom" class="col-sm-2 col-form-label col-form-label-sm">Nom</label>
+				<div class="col-sm-6">
+					<input type="text" id="nom" class="form-control form-control-sm" name="nom" required placeholder={{ infos.nom }}>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="prenom" class="col-sm-2 col-form-label col-form-label-sm">Prenom</label>
+				<div class="col-sm-6">
+					<input type="text" id="prenom" class="form-control form-control-sm" name="prenom" required placeholder={{ infos.prenom }}>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="email" class="col-sm-2 col-form-label col-form-label-sm">Email</label>
+				<div class="col-sm-6">
+					<input type="text" id="email" class="form-control form-control-sm" name="email" required placeholder={{ infos.email }}>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="idiut" class="col-sm-2 col-form-label col-form-label-sm">Identifiant IUT</label>
+				<div class="col-sm-6">
+					<input type="text" id="idiut" class="form-control form-control-sm" name="idiut" placeholder={{ infos.idiut }}>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="annee" class="col-sm-2 col-form-label col-form-label-sm">Année de naissance</label>
+				<div class="col-sm-6">
+					<input type="text" id="annee" class="form-control form-control-sm" name="anneenaissance" placeholder={{ infos.anneenaissance }}>
+				</div>
+			</div>
+		</fieldset>
 
-<input type="hidden" id="idmembre" name="idmembre" value="{{infos.idmembre}}"/>
-<input type="submit" class="btn btn-primary" name="adminmembre" value="adminmembre">
-</form>
+		<input type="hidden" id="idmembre" name="idmembre" value="{{infos.idmembre}}"/>
+		<input type="submit" class="btn btn-dark mt-3" name="validmodifmembre" value="Valider">
+	</form>
 
 {% endblock %}

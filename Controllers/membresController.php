@@ -45,49 +45,52 @@ class MembreController
 
 	function membreInscription($data)
 	{
-		// conversion des données de la date et du fichier
-		$_POST['anneenaissance'] = intval(explode('-', $_POST['anneenaissance'])[0]);
-		$_POST['photo'] = $_FILES["photo"]["name"];
-
 		// insertion des nouvelles données dans la table
 		$membre = new Membre($_POST);
-		$this->membreManager->new_inscription($membre);
+		$email = $this->verif_email($membre->email());
+		if ($email == true) {
+			$this->membreManager->new_inscription($membre);
 
-		// recupération du fichier photo
-		// filtre de sécurité pour empêcher n'importe qui d'envoyer du code exécutable (PHP notamment)
-		$extensions = array('jpg', 'png', 'jpeg', 'gif');
-		if (isset($_FILES["photo"]["name"])) {
-            $file_name = explode('.', $_FILES["photo"]["name"]);
-            $extension = end($file_name);
-			// on compare la fin du nom du fichier (l'extension) à toutes les extensions acceptées (définies dans $extensions)
-            if ( !in_array($extension, $extensions ) ) {
-                $message = "Le fichier n'est pas une image";
-                echo $this->twig->render('index.html.twig', array('acces' => $_SESSION['acces'], 'message' => $message));
-                return;
-            }
-		}
+			// recupération du fichier photo
+			$_POST['photo'] = $_FILES["photo"]["name"];
+			// filtre de sécurité pour empêcher n'importe qui d'envoyer du code exécutable (PHP notamment)
+			$extensions = array('jpg', 'png', 'jpeg', 'gif');
+			if (isset($_FILES["photo"]["name"])) {
+				$file_name = explode('.', $_FILES["photo"]["name"]);
+				$extension = end($file_name);
+				// on compare la fin du nom du fichier (l'extension) à toutes les extensions acceptées (définies dans $extensions)
+				if (!in_array($extension, $extensions)) {
+					$message = "Le fichier n'est pas une image";
+					echo $this->twig->render('index.html.twig', array('acces' => $_SESSION['acces'], 'message' => $message));
+					return;
+				}
+			}
 
-		// upload du fichier sur le serveur
-		if ($_FILES["photo"]["error"] == UPLOAD_ERR_OK) {
-			$uploaddir = "./Views/imgprofil/"; 
-			$uploadfile = $uploaddir . basename($_FILES["photo"]["name"]);
-			if (!move_uploaded_file($_FILES["photo"]["tmp_name"], $uploadfile)) {
-				echo "pb lors du telechargement";
+			// upload du fichier sur le serveur
+			if ($_FILES["photo"]["error"] == UPLOAD_ERR_OK) {
+				$uploaddir = "./Views/imgprofil/";
+				$uploadfile = $uploaddir . basename($_FILES["photo"]["name"]);
+				if (!move_uploaded_file($_FILES["photo"]["tmp_name"], $uploadfile)) {
+					echo "pb lors du telechargement";
+				}
+			} else {
+				echo "pas de fichier";
+			}
+
+			// une fois l'inscription réussie, connexion
+			if ($membre != false) { // acces autorisé : variable de session acces = oui
+				$_SESSION['acces'] = "oui";
+				$_SESSION['idmembre'] = $membre->idMembre();
+				$message = "Bienvenue " . $membre->prenom() . " " . $membre->nom() . " !";
+				echo $this->twig->render('index.html.twig', array('acces' => $_SESSION['acces'], 'message' => $message));
+			} else { // acces non autorisé : variable de session acces = non
+				$message = "identification incorrecte";
+				$_SESSION['acces'] = "non";
+				echo $this->twig->render('index.html.twig', array('acces' => $_SESSION['acces'], 'message' => $message));
 			}
 		} else {
-			echo "pas de fichier";
-		}
-
-		// une fois l'inscription réussie, connexion
-		if ($membre != false) { // acces autorisé : variable de session acces = oui
-			$_SESSION['acces'] = "oui";
-			$_SESSION['idmembre'] = $membre->idMembre();
-			$message = "Bienvenue " . $membre->prenom() . " " . $membre->nom() . " !";
-			echo $this->twig->render('index.html.twig', array('acces' => $_SESSION['acces'], 'message' => $message));
-		} else { // acces non autorisé : variable de session acces = non
-			$message = "identification incorrecte";
-			$_SESSION['acces'] = "non";
-			echo $this->twig->render('index.html.twig', array('acces' => $_SESSION['acces'], 'message' => $message));
+			$message = "l'email n'est pas valide, il faut un email de l'académie de Toulouse";
+			echo $this->twig->render('membre_inscription.html.twig', array('acces' => $_SESSION['acces'], 'message' => $message));
 		}
 	}
 
@@ -138,22 +141,74 @@ class MembreController
 		echo $this->twig->render('espace_utilisateur.html.twig', array('infos' => $infos, 'projets' => $projets, 'acces' => $_SESSION['acces'], 'admin' => $_SESSION['admin']));
 	}
 
+	function formModifierMembre($admin)
+	{
+		if ($admin == 1) {
+			$infos = $this->membreManager->getInfosMembre($_GET['idmembre']);
+		} else {
+			$infos = $this->membreManager->getInfosMembre($_SESSION['idmembre']);
+		}
+		if ($admin == 0 && $_SESSION['idmembre'] != $_GET['idmembre']) {
+			$message = "Vous n'avez pas les permissions pour accéder à cette page";
+			echo $this->twig->render('index.html.twig', array('acces' => $_SESSION['acces'], 'message' => $message, 'admin' => $_SESSION['admin']));
+		} else {
+			echo $this->twig->render('modifier_membre.html.twig', array('acces' => $_SESSION['acces'], 'admin' => $_SESSION['admin'], 'infos' => $infos));
+		}
+	}
+
+	function modifierMembre()
+	{
+		// conversion des données de la date et du fichier
+		$_POST['anneenaissance'] = intval(explode('-', $_POST['anneenaissance'])[0]);
+
+		// insertion des nouvelles données dans la table
+		$membre = new Membre($_POST);
+		$email = $this->verif_email($membre->email());
+		if ($email == true) {
+			$this->membreManager->validerModifMembre($membre);
+			$this->espaceUtilisateur($_SESSION['idmembre']);
+		} else {
+			$message = "l'email n'est pas valide, il faut un email de l'académie de Toulouse";
+			echo $this->twig->render('index.html.twig', array('acces' => $_SESSION['acces'], 'message' => $message, 'admin' => $_SESSION['admin']));
+		}
+	}
+
+
+	// vérification que l'email de l'utilisateur est bien une adresse @etu.iut-tlse3.fr, partiellement reprise à Safwa et Elsa avec leur accord, merci à elles !
+	function verif_email($email)
+	{
+		if ($email !== false) {
+			$email = (string) $email; // check que l'email soit a string 
+
+			// Check si l'email utilise "etu.iut-tlse3.fr"
+			$pattern = "/@etu.iut-tlse3.fr$/";
+
+			if (preg_match($pattern, $email)) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
 	function changerPdp()
 	{
-        $extensions = array('jpg', 'png', 'jpeg', 'gif');
+		$extensions = array('jpg', 'png', 'jpeg', 'gif');
 		if (isset($_FILES["photo"]["name"])) {
-            $file_name = explode('.', $_FILES["photo"]["name"]);
-            $extension = end($file_name);
-            if ( !in_array($extension, $extensions ) ) {
-                $message = "Le fichier n'est pas une image";
-                echo $this->twig->render('index.html.twig', array('acces' => $_SESSION['acces'], 'message' => $message));
-                return;
-            }
+			$file_name = explode('.', $_FILES["photo"]["name"]);
+			$extension = end($file_name);
+			if (!in_array($extension, $extensions)) {
+				$message = "Le fichier n'est pas une image";
+				echo $this->twig->render('index.html.twig', array('acces' => $_SESSION['acces'], 'message' => $message));
+				return;
+			}
 
 			// récupération du nom de l'ancienne photo de profil et suppression sur le serveur
 			$anciennepdp = "./Views/imgprofil/" . $_POST['anciennepdp'];
 			if (is_file($anciennepdp)) {
-				echo (unlink($anciennepdp)) ? "Fichier supprimé" : "Problème lors de la suppression du fichier";
+				unlink($anciennepdp);
 			}
 
 			// recupération du fichier photo

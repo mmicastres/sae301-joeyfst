@@ -48,9 +48,9 @@ class MembreManager
 		$stmt->execute();
 		$membre->setIdMembre($stmt->fetchColumn() + 1);
 
-		$req = "INSERT INTO Utilisateur (idmembre, nom, prenom, email, idiut, mdp, anneenaissance, telportable, photo, admin) VALUES (?,?,?,?,?,?,?,?,?,?)";
+		$req = "INSERT INTO Utilisateur (idmembre, nom, prenom, email, idiut, mdp, anneenaissance, photo, admin) VALUES (?,?,?,?,?,?,?,?,?)";
 		$stmt = $this->_db->prepare($req);
-		$res  = $stmt->execute(array($membre->idMembre(), $membre->nom(), $membre->prenom(), $membre->email(), $membre->idIut(), $membre->mdp(), $membre->anneeNaissance(), $membre->telPortable(), $membre->photo(), $membre->admin()));
+		$res  = $stmt->execute(array($membre->idMembre(), $membre->nom(), $membre->prenom(), $membre->email(), $membre->idIut(), $membre->mdp(), $membre->anneeNaissance(), $membre->photo(), $membre->admin()));
 		$errorInfo = $stmt->errorInfo();
 		if ($errorInfo[0] != 0) {
 			print_r($errorInfo);
@@ -60,7 +60,7 @@ class MembreManager
 
 	public function getInfosMembre($idmembre)
 	{
-		$req = "SELECT nom, prenom, email, idiut, anneenaissance, telportable, photo FROM Utilisateur WHERE idmembre=:idmembre";
+		$req = "SELECT idmembre, nom, prenom, email, idiut, anneenaissance, photo FROM Utilisateur WHERE idmembre=:idmembre";
 		$stmt = $this->_db->prepare($req);
 		$stmt->execute(array(":idmembre" => $idmembre));
 		// debug requête SQL
@@ -108,6 +108,18 @@ class MembreManager
 		} else {
 			return $projets;
 		}
+	}
+
+	public function validerModifMembre($membre)
+	{
+		$req = "UPDATE Utilisateur SET nom = ?, prenom = ?, email = ?, idiut = ?, anneenaissance = ? WHERE idmembre = ?";
+		$stmt = $this->_db->prepare($req);
+		$res  = $stmt->execute(array($membre->nom(), $membre->prenom(), $membre->email(), $membre->idIut(), $membre->anneeNaissance(), $membre->idMembre()));
+		$errorInfo = $stmt->errorInfo();
+		if ($errorInfo[0] != 0) {
+			print_r($errorInfo);
+		}
+		return $res;
 	}
 
 }

@@ -1,121 +1,146 @@
 {% extends "index.html.twig" %}
 
 {% block section %}
-{{message}}
-<h2>Projets à valider</h2>
-<table class="table table-hover table-sm">
-		<thead>
-			<tr>
-				<th>Id</th>
-				<th>Titre</th>
-				<th>Description</th>
-				<th>Démo</th>
-				<th>Source</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for projet in projets %}
-					<tr>
-						<td>{{projet.idprojet}}</td>
-						<td>{{projet.titre}}</td>
-						<td>{{projet.description}}</td>
-						<td>{{projet.demo}}</td>
-						<td>{{projet.source}}</td>
-						<td>
-								<a href="?action=infoprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-primary">
-									Voir plus
-								</a>
-                                <a href="?action=validerprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-primary">
-									Valider le projet
-								</a>
-						</td>
-					</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+	{{message}}
+	<h2 class="mb-3">Projets à valider</h2>
+	<div class="container d-flex justify-content-around row gap-3">
+		{% for projet in projets %}
 
-<h2>Ajouter...</h2>
+			<div class="col mb-4 mx-auto">
+				<div class="card" style="width: 18rem;">
+					<img src="./Views/imgprojet/{{images.lienimage}}" class="card-img-top" alt="{{images.lienimage}}">
+					<div class="card-body">
+						<h5 class="card-title">{{projet.titre}}</h5>
+						<p class="card-text">{{projet.description}}</p>
+						<a href="?action=infoprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-dark">Voir plus</a>
+						<a href="?action=validerprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-success">
+							Valider le projet
+						</a>
+					</div>
+				</div>
+			</div>
 
-<form method="post" action="index.php" class="well">
-<fieldset="form-group">
-<legend>Une ressource :</legend>
-	<label for="semestre" class="col-sm-2 col-form-label col-form-label-sm">Semestre</label>
-    <select id="semestre" class="form-control form-control-sm" name="semestre" />
-		<option value="S1">S1</option>
-		<option value="S2">S2</option>
-		<option value="S3">S3</option>
-		<option value="S4">S4</option>
+		{% endfor %}
+	</div>
+
+	<form method="post" action="index.php" class="well">
+		<fieldset="form-group">
+			<h2>Ajouter :</h2>
+
+			<legend>Une ressource :</legend>
+			<label for="semestre" class="col-sm-2 col-form-label col-form-label-sm">Semestre</label>
+			<select id="semestre" class="form-control form-control-sm" name="semestre"/>
+			<option value="S1">S1</option>
+			<option value="S2">S2</option>
+			<option value="S3">S3</option>
+			<option value="S4">S4</option>
 		</select>
-	<label for="intitule" class="col-sm-2 col-form-label col-form-label-sm">Code de la ressource</label>
-	<input type="text" id="intitule" class="form-control form-control-sm" name="intitule" placeholder="Ex R101..." />
-	<label for="titre" class="col-sm-2 col-form-label col-form-label-sm">Nom</label>	
-    <input type="text" id="nomcomplet" class="form-control form-control-sm" name="nomcomplet" placeholder="Nom complet de la ressource" />
-<legend>Une catégorie :</legend>
-    <input  type="text" id="categorie" class="form-control form-control-sm" name="categorie" placeholder="Nom de la catégorie" />
-<legend>Un tag :</legend>
-    <input  type="text" id="tag" class="form-control form-control-sm" name="tag" placeholder="Nom du tag" />
-<input type="submit" class="btn btn-primary" name="admin_categorie" value="valider"/>
+		<label for="intitule" class="col-sm-2 col-form-label col-form-label-sm">Code de la ressource</label>
+		<input type="text" id="intitule" class="form-control form-control-sm" name="intitule" placeholder="Ex R101..."/>
+		<label for="titre" class="col-sm-2 col-form-label col-form-label-sm">Nom</label>
+		<input type="text" id="nomcomplet" class="form-control form-control-sm" name="nomcomplet" placeholder="Nom complet de la ressource"/>
+		<legend>Une catégorie :</legend>
+		<input type="text" id="categorie" class="form-control form-control-sm" name="categorie" placeholder="Nom de la catégorie"/>
+		<legend>Un tag :</legend>
+		<input type="text" id="tag" class="form-control form-control-sm" name="tag" placeholder="Nom du tag"/>
+		<input type="submit" class="btn btn-dark mt-3" name="ajoutercategorie" value="Valider"/>
 
-</fieldset>
+	</fieldset>
 </form>
 
-<h2>Liste des utilisateurs</h2>
+<h2 class="mt-5">Supprimer :</h2>
+
+<form method="post" action="index.php" class="well">
+	<fieldset="form-group">
+		<legend>Une ressource :</legend>
+		<div class="form-group row">
+			<select class="form-select" id="ressources" name="ressources">
+				<option value="" selected disabled hidden>Choisir ici</option>
+				{% for ressource in ressources %}
+					<option value="{{ressource.idressource}}">{{ressource.intitule}}
+						-
+						{{ressource.identifiant}}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<legend>Une catégorie :</legend>
+		<div class="form-group row">
+			<select class="form-select" id="categories" name="categories">
+				<option value="" selected disabled hidden>Choisir ici</option>
+				{% for categorie in categories %}
+					<option value="{{categorie.idcategorie}}">{{categorie.nomcategorie}}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<legend>Un tag :</legend>
+		<div class="form-group row">
+			<select class="form-select" id="tags" name="tags">
+				<option value="" selected disabled hidden>Choisir ici</option>
+				{% for tag in tags %}
+					<option value="{{tag.idtag}}">{{tag.nomtag}}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<input type="submit" class="btn btn-dark mt-3" name="supprimercategorie" value="Valider"/>
+
+	</fieldset>
+</form>
+
+<h2 class="mt-5">Liste des utilisateurs</h2>
 
 <table class="table table-hover table-sm">
-		<thead>
+	<thead>
+		<tr>
+			<th>Nom</th>
+			<th>Prenom</th>
+			<th>Photo</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for membre in membres %}
 			<tr>
-				<th>Nom</th>
-				<th>Prenom</th>
-				<th>Photo</th>
+				<td>{{membre.nom}}</td>
+				<td>{{membre.prenom}}</td>
+				<td><img id="pdp" src="./Views/imgprofil/{{membre.photo}}" alt="photodeprofil"></td>
+				<td>
+					<a href="?action=modifiermembre&idmembre={{membre.idmembre}}" name="idmembre" value="{{membre.idmembre}}" class="btn btn-dark">
+						Modifier le membre
+					</a>
+					{% if membre.admin == 0 %}
+						<a href="?action=promouvoiradmin&idmembre={{membre.idmembre}}" name="idmembre" value="{{membre.idmembre}}" class="btn btn-success">
+							Promouvoir administrateur
+						</a>
+						<a href="?action=supprimermembre&idmembre={{membre.idmembre}}" name="idmembre" value="{{membre.idmembre}}" class="btn btn-danger">
+							Supprimer le membre
+						</a>
+					{% endif %}
+				</td>
 			</tr>
-		</thead>
-		<tbody>
-			{% for membre in membres %}
-					<tr>
-						<td>{{membre.nom}}</td>
-						<td>{{membre.prenom}}</td>
-						<td><img id="pdp" src="./Views/imgprofil/{{membre.photo}}" alt="photodeprofil"></td>
-						<td>
-								<a href="?action=modifiermembre&idmembre={{membre.idmembre}}" name="idmembre" value="{{membre.idmembre}}" class="btn btn-primary">
-									Modifier le membre
-								</a>
-						</td>
-					</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+		{% endfor %}
+	</tbody>
+</table>
 
 <h2>Liste des projets</h2>
 
-<table class="table table-hover table-sm">
-		<thead>
-			<tr>
-				<th>Id</th>
-				<th>Titre</th>
-				<th>Description</th>
-				<th>Démo</th>
-				<th>Source</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for projet in projetsvalides %}
-					<tr>
-						<td>{{projet.idprojet}}</td>
-						<td>{{projet.titre}}</td>
-						<td>{{projet.description}}</td>
-						<td>{{projet.demo}}</td>
-						<td>{{projet.source}}</td>
-						<td>
-								<a href="?action=infoprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-primary">
-									Voir plus
-								</a>
-                                <a href="?action=validerprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-primary">
-									Modifier le projet
-								</a>
-						</td>
-					</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+<div class="container d-flex justify-content-around row gap-3">
+	{% for projet in projetsvalides %}
 
-{% endblock %}
+		<div class="col mb-4 mx-auto">
+			<div class="card" style="width: 18rem;">
+				<img src="./Views/imgprojet/{{images.lienimage}}" class="card-img-top" alt="{{images.lienimage}}">
+				<div class="card-body">
+					<h5 class="card-title">{{projet.titre}}</h5>
+					<p class="card-text">{{projet.description}}</p>
+					<a href="?action=infoprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-dark">Voir plus</a>
+					<a href="?action=modifprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-primary">
+						Modifier le projet
+					</a>
+					<a href="?action=supprimerprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-danger">
+						Supprimer le projet
+					</a>
+				</div>
+			</div>
+		</div>
+
+	{% endfor %}
+</div>{% endblock %}

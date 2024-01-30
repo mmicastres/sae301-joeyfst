@@ -10,7 +10,6 @@ class Membre {
 		private string $_idiut;
 		private string $_mdp;
 		private int $_anneenaissance;
-		private string $_telportable;
 		private string $_photo;
 		private int $_admin;
 		
@@ -24,7 +23,6 @@ class Membre {
 			if (isset($donnees['idiut'])) { $this->_idiut = $donnees['idiut']; }
 			if (isset($donnees['mdp'])) { $this->_mdp = $donnees['mdp']; }
 			if (isset($donnees['anneenaissance'])) { $this->_anneenaissance = $donnees['anneenaissance']; }
-			if (isset($donnees['telportable'])) { $this->_telportable = $donnees['telportable']; }
 			if (isset($donnees['photo'])) { $this->_photo = $donnees['photo']; }
 			if (isset($donnees['admin'])) { $this->_admin = $donnees['admin']; }
         }           
@@ -36,7 +34,6 @@ class Membre {
 		public function idIut() { return $this->_idiut;}
 		public function mdp() { return $this->_mdp;}
 		public function anneeNaissance() { return $this->_anneenaissance;}
-		public function telPortable() { return $this->_telportable;}
 		public function photo() { return $this->_photo;}
 		public function admin() { return $this->_admin;}
 		public function getAge() { return (date('Y')- $this->_anneenaissance) ; }
@@ -49,7 +46,6 @@ class Membre {
 		public function setIdIut(string $idiut) { $this->_idiut = $idiut; }
 		public function setMdp(string $mdp) { $this->_mdp = $mdp; }
 		public function setAnneeNaissance(int $anneenaissance) { $this->_anneenaissance = $anneenaissance; }
-		public function setTelPortable(string $telportable) { $this->_telportable = $telportable; }	
 		public function setPhoto(string $photo) { $this->_photo = $photo; }			
 		public function setAdmin(int $admin) { $this->_admin = $admin; }
 

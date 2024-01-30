@@ -1,56 +1,206 @@
 {% extends "index.html.twig" %}
 
 {% block section %}
-    {% if estContributeur == true %}
-    <a class="btn btn-primary" href="?action=modifprojet&idprojet={{projet.idprojet}}">Modifier le projet</a>
-    {% endif %}
-	<table class="table table-hover table-sm">
-		<thead>
-			<tr>
-				<th>Id</th>
-				<th>Titre</th>
-				<th>Description</th>
-				<th>Démo</th>
-				<th>Source</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>{{projet.idprojet}}</td>
-				<td>{{projet.titre}}</td>
-				<td>{{projet.description}}</td>
-				<td>{{projet.demo}}</td>
-				<td>{{projet.source}}</td>
-			</tr>
-		</tbody>
-	</table>
+	{% if estContributeur == false and admin == 0 %}
+		<a class="btn btn-secondary mb-3" disabled>Modifier le projet</a>
 
-    <p>Catégories :</p>
-    {% for categorie in categories %}
-        {{categorie.nomcategorie}}
-    {% endfor %}
+	{% else %}
+		<a class="btn btn-dark mb-3" href="?action=modifprojet&idprojet={{projet.idprojet}}">Modifier le projet</a>
+	{% endif %}
 
-    <p>Tags :</p>
-    {% for tag in tags %}
-        {{tag.nomtag}}
-    {% endfor %}
+	<div class="d-flex flex-column align-items-center mb-5">
+		<h1 class="mb-4">{{projet.titre}}</h1>
 
-    <p>Images :</p>
-    {% for image in images %}
-    <img src="./Views/imgprojet/{{image.lienimage}}" alt="photoprojet">
-    {% endfor %}
+		{% if images is empty %}
+			<p>Pas d'image disponible</p>
+		{% else %}
+			<div class="d-flex justify-content-center">
+				<div id="carouselExampleIndicators" class="carousel carousel-dark slide w-50">
+					<div class="carousel-indicators">
+						<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+						<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+						<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+					</div>
+					<div class="carousel-inner">
+						{% for image in images %}
+							{% if loop.index == 1 %}
+								<div class="carousel-item active">
+								{% else %}
+									<div class="carousel-item ">
+									{% endif %}
+									<img src="./Views/imgprojet/{{image.lienimage}}" class="d-block object-fit-md-cover img-fluid border border-dark" alt="Image du projet 1">
+								</div>
+							{% endfor %}
+						</div>
+						<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							<span class="visually-hidden">Previous</span>
+						</button>
+						<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+							<span class="carousel-control-next-icon" aria-hidden="true"></span>
+							<span class="visually-hidden">Next</span>
+						</button>
+					</div>
+				</div>
+			{% endif %}
+		</div>
 
-    <p>Ressources :</p>
-    {% for ressource in ressources %}
-        {{ressource.semestre}}
-        {{ressource.intitule}}
-        {{ressource.identifiant}}
-    {% endfor %}
+		<div class="container bg-dark-subtle pt-3" id="infoprojet">
+			<div class="row mb-3 align-items-start">
+				<div class="col-4">
+					<p>Description</p>
+				</div>
+				<div class="col-8">
+					<p>{{projet.description}}</p>
+				</div>
+			</div>
 
-    <p>Contributeurs :</p>
-    {% for contributeur in contributeurs %}
-        {{contributeur.nom}}
-        {{contributeur.prenom}}
-    <img src="./Views/imgprofil/{{contributeur.photo}}" alt="photodeprofil">
-    {% endfor %}
-{% endblock %}
+			<div class="row mb-3 align-items-center">
+				<div class="col-4">
+					<p>Contributeurs :</p>
+				</div>
+				<div class="col-8">
+					{% for contributeur in contributeurs %}
+						<img src="./Views/imgprofil/{{contributeur.photo}}" class="img-thumbnail photodeprofilcontributeur" alt="photodeprofil">
+						{{contributeur.prenom}}
+						{{contributeur.nom}}
+					{% endfor %}
+				</div>
+			</div>
+			<div class="row mb-3 align-items-start">
+				<div class="col-4">
+					<p>Catégories :</p>
+				</div>
+				<div class="col-8">
+					{% if categories is empty%}
+						<p>Pas de catégorie spécifiée</p>
+					{% else %}
+						{% for categorie in categories %}
+							{{categorie.nomcategorie}}
+						{% endfor %}
+					{% endif %}
+				</div>
+			</div>
+			<div class="row mb-3 align-items-start">
+				<div class="col-4">
+					<p>Tags :</p>
+				</div>
+				<div class="col-8">
+					{% if tags is empty%}
+						<p>Pas de tag spécifié</p>
+					{% else %}
+						{% for tag in tags %}
+							{{tag.nomtag}}
+						{% endfor %}
+					{% endif %}
+				</div>
+			</div>
+			<div class="row mb-3 align-items-start">
+				<div class="col-4">
+					<p>Ressources :</p>
+				</div>
+				<div class="col-8">
+					{% if ressources is empty%}
+						<p>Pas de ressource spécifiée</p>
+					{% else %}
+						{% for ressource in ressources %}
+							{{ressource.semestre}}
+							{{ressource.intitule}}
+							{{ressource.identifiant}}
+						{% endfor %}
+					{% endif %}
+				</div>
+			</div>
+			<div class="row mb-3 align-items-start">
+				<div class="col-4">
+					<p>Démo</p>
+				</div>
+				<div class="col-8">
+					<p>{{projet.demo}}</p>
+				</div>
+			</div>
+			<div class="row mb-3 align-items-start">
+				<div class="col-4">
+					<p>Source</p>
+				</div>
+				<div class="col-8">
+					<p>{{projet.source}}</p>
+				</div>
+			</div>
+		</div>
+
+
+		<h2>Notes et commentaires</h2>
+
+		<form method="post" action="index.php" class="well">
+			<div>
+				<fieldset>
+					<div class="row mb-4">
+						<div class="col-4">
+							<legend>Note globale :
+							</div>
+							<div class="col-8">
+								{% if moyenne == 0 %}Il n'y a pas encore de votes pour ce projet
+								{% else %}
+									{{moyenne}}
+									sur un total de
+									{{notes|length}}
+									votes
+								{% endif %}
+							</legend>
+						</div>
+						<div class="col-4">
+							<legend>Votre note :</legend>
+						</div>
+						<div class="col-8">
+							{% for note in notes %}
+								{% if idmembre == note.Id_1 %}
+									{{note.note}}
+								{% endif %}
+							{% endfor %}
+						</div>
+						<div class="col-4">
+							<legend>Laisser une note :</legend>
+						</div>
+						<div class="col-8">
+							<input type="radio" value="1" name="note" id="un"/>
+							<label for="un">1</label>
+							<input type="radio" value="2" name="note" id="deux"/>
+							<label for="deux">2</label>
+							<input type="radio" value="3" name="note" id="trois"/>
+							<label for="trois">3</label>
+							<input type="radio" value="4" name="note" id="quatre"/>
+							<label for="quatre">4</label>
+							<input type="radio" value="5" name="note" id="cinq"/>
+							<label for="cinq">5</label>
+						</div>
+					</div>
+					<legend>Commentaires :</legend>
+					{% for commentaire in commentaires %}
+						<div class="container-fluid d-flex flex-row align-item-start">
+							<div class="col d-flex">
+								<img src="./Views/imgprofil/{{commentaire.photo}}" class="img-thumbnail photodeprofilcommentaire w-50 h-auto" alt="photodeprofil">
+							</div>
+							<div class="col d-flex flex-grow-1 flex-column ">
+								<div class="row">
+									{{commentaire.prenom}}
+									{{commentaire.nom}}</div>
+								<div class="row flex-grow-1">
+									{{commentaire.commentaire}}
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+					<br><label for="motivation">Donnez vos impressions sur ce projet :</label><br/>
+					<textarea rows="3" cols="120" name="commentaire" id="commentaire"></textarea>
+					<input type="hidden" name="idprojet" value="{{projet.idprojet}}">
+					{% if acces == "oui" %}
+						<input type="submit" class="btn btn-dark" name="envoyercommentaire" value="Envoyer"/>
+					{% else %}
+						<input type="submit" class="btn btn-dark" disabled name="envoyercommentaire" value="Envoyer"/>
+					{% endif %}
+
+				</fieldset>
+			</div>
+		</form>
+	{% endblock %}

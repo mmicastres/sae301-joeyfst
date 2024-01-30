@@ -39,7 +39,7 @@ class adminManager
 	public function allUsersInfos()
 	{
 		$membres = array();
-		$req = "SELECT idmembre, nom, prenom, photo FROM Utilisateur";
+		$req = "SELECT idmembre, nom, prenom, photo, admin FROM Utilisateur";
 		$stmt = $this->_db->prepare($req);
 		$stmt->execute();
 		// pour debuguer les requêtes SQL
@@ -83,6 +83,57 @@ class adminManager
 			$projets[] = new Projet($donnees);
 		}
 		return $projets;
+	}
+
+	public function getCategories()
+	{
+		$req = "SELECT idcategorie, nomcategorie FROM Categories";
+		$stmt = $this->_db->prepare($req);
+		$stmt->execute();
+		// pour debuguer les requêtes SQL
+		$errorInfo = $stmt->errorInfo();
+		if ($errorInfo[0] != 0) {
+			print_r($errorInfo);
+		}
+		// récup des données
+		while ($donnees = $stmt->fetch()) {
+			$categories[] = $donnees;
+		}
+		return $categories;
+	}
+
+	public function getTags()
+	{
+		$req = "SELECT idtag, nomtag FROM Tags";
+		$stmt = $this->_db->prepare($req);
+		$stmt->execute();
+		// pour debuguer les requêtes SQL
+		$errorInfo = $stmt->errorInfo();
+		if ($errorInfo[0] != 0) {
+			print_r($errorInfo);
+		}
+		// récup des données
+		while ($donnees = $stmt->fetch()) {
+			$tags[] = $donnees;
+		}
+		return $tags;
+	}
+
+	public function getRessources()
+	{
+		$req = "SELECT idressource, intitule, identifiant FROM Ressource";
+		$stmt = $this->_db->prepare($req);
+		$stmt->execute();
+		// pour debuguer les requêtes SQL
+		$errorInfo = $stmt->errorInfo();
+		if ($errorInfo[0] != 0) {
+			print_r($errorInfo);
+		}
+		// récup des données
+		while ($donnees = $stmt->fetch()) {
+			$ressources[] = $donnees;
+		}
+		return $ressources;
 	}
 
 	public function ajoutRessource($semestre, $intitule, $nomcomplet)
@@ -142,9 +193,48 @@ class adminManager
 		return true;
 	}
 
+	public function deleteRessource($ressource)
+	{
+		$req = "DELETE FROM Ressource WHERE idressource = ?";
+		$stmt = $this->_db->prepare($req);
+		$stmt->execute(array($ressource));
+		// pour debuguer les requêtes SQL
+		$errorInfo = $stmt->errorInfo();
+		if ($errorInfo[0] != 0) {
+			print_r($errorInfo);
+		}
+		return true;
+	}
+
+	public function deleteCategorie($categorie)
+	{
+		$req = "DELETE FROM Categories WHERE idcategorie = ?";
+		$stmt = $this->_db->prepare($req);
+		$stmt->execute(array($categorie));
+		// pour debuguer les requêtes SQL
+		$errorInfo = $stmt->errorInfo();
+		if ($errorInfo[0] != 0) {
+			print_r($errorInfo);
+		}
+		return true;
+	}
+
+	public function deleteTag($tag)
+	{
+		$req = "DELETE FROM Tags WHERE idtag = ?";
+		$stmt = $this->_db->prepare($req);
+		$stmt->execute(array($tag));
+		// pour debuguer les requêtes SQL
+		$errorInfo = $stmt->errorInfo();
+		if ($errorInfo[0] != 0) {
+			print_r($errorInfo);
+		}
+		return true;
+	}
+
 	public function getInfosMembre($idmembre)
 	{
-		$req = "SELECT idmembre, nom, prenom, email, idiut, anneenaissance, telportable, photo FROM Utilisateur WHERE idmembre=:idmembre";
+		$req = "SELECT idmembre, nom, prenom, email, idiut, anneenaissance, photo FROM Utilisateur WHERE idmembre=:idmembre";
 		$stmt = $this->_db->prepare($req);
 		$stmt->execute(array(":idmembre" => $idmembre));
 		// debug requête SQL
@@ -157,15 +247,17 @@ class adminManager
 		return $infos;
 	}
 
-	public function validerModifMembre($membre)
+	public function setAdmin($idmembre)
 	{
-		$req = "UPDATE Utilisateur SET nom = ?, prenom = ?, email = ?, idiut = ?, anneenaissance = ?, telportable = ?, photo = ? WHERE idmembre = ?";
+		$req = "UPDATE Utilisateur SET admin = 1 WHERE idmembre = ?";
 		$stmt = $this->_db->prepare($req);
-		$res  = $stmt->execute(array($membre->nom(), $membre->prenom(), $membre->email(), $membre->idIut(), $membre->anneeNaissance(), $membre->telPortable(), $membre->photo(), $membre->idMembre()));
+		$res = $stmt->execute(array($idmembre));
 		$errorInfo = $stmt->errorInfo();
 		if ($errorInfo[0] != 0) {
 			print_r($errorInfo);
 		}
+		// recup des données
+		$infos = $stmt->fetch();
 		return $res;
 	}
 }

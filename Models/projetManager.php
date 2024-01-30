@@ -25,7 +25,7 @@ class ProjetManager
 	{
 		// définitions des objets à récupérer
 		$projets = array();
-		$req = "SELECT idprojet, titre, description, demo, source, valideadmin FROM Projet";
+		$req = "SELECT idprojet, titre, description, valideadmin FROM Projet";
 		$stmt = $this->_db->prepare($req);
 		$stmt->execute();
 		// pour debuguer les requêtes SQL
@@ -147,18 +147,20 @@ class ProjetManager
 		}
 		// récup des données
 		while ($donnees = $stmt->fetch()) {
+			mb_convert_encoding($donnees, "UTF-8");
 			$ressources[] = $donnees;
 		}
 		if (empty($ressources)) {
 			return null;
 		} else {
+
 			return $ressources;
 		}
 	}
 
 	public function allRessources()
 	{
-		$req = "SELECT idressource, intitule FROM Ressource";
+		$req = "SELECT idressource, intitule, identifiant FROM Ressource";
 		$stmt = $this->_db->prepare($req);
 		$stmt->execute();
 		// pour debuguer les requêtes SQL
@@ -168,6 +170,7 @@ class ProjetManager
 		}
 		// récup des données
 		while ($donnees = $stmt->fetch()) {
+			$donnees = mb_convert_encoding($donnees, "utf-8");
 			$ressources[] = $donnees;
 		}
 		return $ressources;
@@ -376,58 +379,6 @@ class ProjetManager
 		return $res;
 	}
 
-	public function modifProjetCategories($idprojet, $idcategorie)
-	{
-		$req = "UPDATE Ajoutercat SET Id_1 = :idcategorie WHERE Id = :idprojet";
-		$stmt = $this->_db->prepare($req);
-		$res = $stmt->execute(array(':idprojet' => $idprojet, ':idcategorie' => $idcategorie));
-		// pour debuguer les requêtes SQL
-		$errorInfo = $stmt->errorInfo();
-		if ($errorInfo[0] != 0) {
-			print_r($errorInfo);
-		}
-		return $res;
-	}
-
-	public function modifProjetTags($idprojet, $idtag)
-	{
-		$req = "UPDATE Ajoutertag SET Id_1 = :idtag WHERE Id = :idprojet";
-		$stmt = $this->_db->prepare($req);
-		$res = $stmt->execute(array(':idprojet' => $idprojet, ':idtag' => $idtag));
-		// pour debuguer les requêtes SQL
-		$errorInfo = $stmt->errorInfo();
-		if ($errorInfo[0] != 0) {
-			print_r($errorInfo);
-		}
-		return $res;
-	}
-
-	public function modifProjetRessources($idprojet, $idressource)
-	{
-		$req = "UPDATE Contexte SET Id_1 = :idressource WHERE Id = :idprojet";
-		$stmt = $this->_db->prepare($req);
-		$res = $stmt->execute(array(':idprojet' => $idprojet, ':idressource' => $idressource));
-		// pour debuguer les requêtes SQL
-		$errorInfo = $stmt->errorInfo();
-		if ($errorInfo[0] != 0) {
-			print_r($errorInfo);
-		}
-		return $res;
-	}
-
-	public function modifProjetContributeurs($idprojet, $idmembre)
-	{
-		$req = "UPDATE A_contribue SET Id_1 = :idmembre WHERE Id = :idprojet";
-		$stmt = $this->_db->prepare($req);
-		$res = $stmt->execute(array(':idprojet' => $idprojet, ':idmembre' => $idmembre));
-		// pour debuguer les requêtes SQL
-		$errorInfo = $stmt->errorInfo();
-		if ($errorInfo[0] != 0) {
-			print_r($errorInfo);
-		}
-		return $res;
-	}
-
 	/**
 	 * suppression d'un projet dans la base de données
 	 * @param Projet
@@ -468,6 +419,32 @@ class ProjetManager
 		return $stmt->execute(array($idprojet));
 	}
 
+	public function getIdImages($idprojet)
+	{
+		$req = "SELECT idimage FROM Projet INNER JOIN Ajouterimg on Projet.idprojet = Ajouterimg.Id INNER JOIN Images on Ajouterimg.Id_1 = Images.idimage WHERE idprojet=?";
+		$stmt = $this->_db->prepare($req);
+		$res = $stmt->execute(array($idprojet));
+		if ($res == true) {
+			return false;
+		} else {
+			return $res;
+		}
+	}
+
+	public function deleteImages($idprojet)
+	{
+		$req = "DELETE FROM Images WHERE idimage = ?";
+		$stmt = $this->_db->prepare($req);
+		return $stmt->execute(array($idprojet));
+	}
+
+	public function deleteProjetImages($idprojet)
+	{
+		$req = "DELETE FROM Ajouterimg WHERE Id = ?";
+		$stmt = $this->_db->prepare($req);
+		return $stmt->execute(array($idprojet));
+	}
+
 	/**
 	 * nombre d'itinéraires dans la base de données
 	 * @return int le nb d'itinéraires
@@ -480,31 +457,48 @@ class ProjetManager
 	}
 
 	/**
-	 * méthode de recherche d'itinéraires dans la BD à partir des critères passés en paramètre
-	 * @param string $lieudepart
-	 * @param string $lieudepart
-	 * @param string $datedepart
-	 * @return Itineraire[]
+	 * méthode de recherche de projets dans la BD à partir des critères passés en paramètre, fonction partiellement reprise du modèle des itinéraires
+	 * @return Projet[]
 	 */
-	public function search(string $lieudepart, string $lieuarrivee, string $datedepart)
+	public function search($titre, $description, $categorie, $tag, $ressource)
 	{
-		$req = "SELECT iditi,lieudepart,lieuarrivee,heuredepart,date_format(datedepart,'%d/%c/%Y')as datedepart,tarif,nbplaces,bagagesautorises,details FROM itineraire";
-		$cond = '';
+		$req = "SELECT idprojet, titre, description, valideadmin FROM Projet";
+		$cond = " WHERE";
 
-		if ($lieudepart <> "") {
-			$cond = $cond . " lieudepart like '%" . $lieudepart . "%'";
+		if ($categorie != "") {
+			$req = $req . " INNER JOIN Ajoutercat on Projet.idprojet = Ajoutercat.Id INNER JOIN Categories on Ajoutercat.Id_1 = Categories.idcategorie";
+			$cond = $cond . " idcategorie=" . $categorie;
+			if ($tag != "" || $ressource != "" || $titre != "" || $description != "") {
+				$cond = $cond . " AND";
+			}
 		}
-		if ($lieuarrivee <> "") {
-			if ($cond <> "") $cond .= " AND ";
-			$cond = $cond . " lieuarrivee like '%" . $lieuarrivee . "%'";
+		if ($tag != "") {
+			$req = $req . " INNER JOIN Ajoutertag on Projet.idprojet = Ajoutertag.Id INNER JOIN Tags on Ajoutertag.Id_1 = Tags.idtag";
+			$cond = $cond . " idtag=" . $tag;
+			if ($ressource != "" || $titre != "" || $description != "") {
+				$cond = $cond . " AND";
+			}
 		}
-		if ($datedepart <> "") {
-			if ($cond <> "") $cond .= " AND ";
-			$cond = $cond . " datedepart = '" . dateChgmtFormat($datedepart) . "'";
+		if ($ressource != "") {
+			$req = $req . " INNER JOIN Contexte on Projet.idprojet = Contexte.Id INNER JOIN Ressource on Contexte.Id_1 = Ressource.idressource";
+			$cond = $cond . " idressource=" . $ressource;
+			if ($titre != "" || $description != "") {
+				$cond = $cond . " AND";
+			}
 		}
-		if ($cond <> "") {
-			$req .= " WHERE " . $cond;
+		if ($titre != "") {
+			$cond = $cond . " titre like '%" . $titre . "%'";
+			if ($description != "") {
+				$cond = $cond . " AND";
+			}
 		}
+		if ($titre != "") {
+			$cond = $cond . " description like '%" . $description . "%'";
+		}
+		if ($cond != " WHERE") {
+			$req = $req . $cond;
+		}
+
 		// execution de la requete				
 		$stmt = $this->_db->prepare($req);
 		$stmt->execute();
@@ -513,52 +507,92 @@ class ProjetManager
 		if ($errorInfo[0] != 0) {
 			print_r($errorInfo);
 		}
-		$itineraires = array();
+		$projets = array();
+		// récup des données
 		while ($donnees = $stmt->fetch()) {
-			$itineraires[] = new Itineraire($donnees);
+			$projets[] = new Projet($donnees);
 		}
-		return $itineraires;
+		return $projets;
 	}
 
-	/**
-	 * modification d'un itineraire dans la BD
-	 * @param Itineraire
-	 * @return boolean 
-	 */
-	public function update(Itineraire $iti): bool
+	public function deleteNote($idprojet, $idmembre)
 	{
-		$req = "UPDATE itineraire SET lieudepart = :lieudepart, "
-			. "lieuarrivee = :lieuarrivee, "
-			. "heuredepart = :heuredepart, "
-			. "datedepart  = :datedepart, "
-			. "tarif = :tarif, "
-			. "nbplaces = :nbplaces, "
-			. "bagagesautorises= :bagages, "
-			. "details = :details"
-			. " WHERE iditi = :iditi";
-		//var_dump($iti);
-
+		$req = "DELETE FROM Peut_noter WHERE Id = ? AND Id_1 = ?";
 		$stmt = $this->_db->prepare($req);
-		$stmt->execute(array(
-			":lieudepart" => $iti->lieuDepart(),
-			":lieuarrivee" => $iti->lieuArrivee(),
-			":heuredepart" => $iti->heureDepart(),
-			":datedepart" => dateChgmtFormat($iti->dateDepart()),
-			":tarif" => $iti->tarif(),
-			":nbplaces" => $iti->nbPlaces(),
-			":bagages" => $iti->bagagesAutorises(),
-			":details" => $iti->details(),
-			":iditi" => $iti->idIti()
-		));
-		return $stmt->rowCount();
+		$stmt->execute(array($idprojet, $idmembre));
+		// pour debuguer les requêtes SQL
+		$errorInfo = $stmt->errorInfo();
+		if ($errorInfo[0] != 0) {
+			print_r($errorInfo);
+		}
+		return;
 	}
-}
 
-// fontion de changement de format d'une date
-// tranformation de la date au format j/m/a au format a/m/j
-function dateChgmtFormat($date)
-{
-	//echo "date:".$date;
-	list($j, $m, $a) = explode("/", $date);
-	return "$a/$m/$j";
+	public function addNote($idprojet, $idmembre, $note)
+	{
+		$req = "INSERT INTO Peut_noter (`Id`, `Id_1`, `note`) VALUES (?,?,?)";
+		$stmt = $this->_db->prepare($req);
+		$stmt->execute(array($idprojet, $idmembre, $note));
+		// pour debuguer les requêtes SQL
+		$errorInfo = $stmt->errorInfo();
+		if ($errorInfo[0] != 0) {
+			print_r($errorInfo);
+		}
+		return true;
+	}
+
+	public function getNotes($idprojet)
+	{
+		$req = "SELECT Id_1, note FROM Peut_noter WHERE Id = ?";
+		$stmt = $this->_db->prepare($req);
+		$stmt->execute(array($idprojet));
+		// pour debuguer les requêtes SQL
+		$errorInfo = $stmt->errorInfo();
+		if ($errorInfo[0] != 0) {
+			print_r($errorInfo);
+		}
+		// récup des données
+		while ($donnees = $stmt->fetch()) {
+			$notes[] = $donnees;
+		}
+		if (!empty($notes)) {
+			return $notes;
+		} else {
+			return false;
+		}
+	}
+
+	public function getCommentaires($idprojet)
+	{
+		$req = "SELECT commentaire, nom, prenom, photo FROM Peut_commenter INNER JOIN Utilisateur ON Peut_commenter.Id_1 = Utilisateur.idmembre WHERE Id = ?";
+		$stmt = $this->_db->prepare($req);
+		$stmt->execute(array($idprojet));
+		// pour debuguer les requêtes SQL
+		$errorInfo = $stmt->errorInfo();
+		if ($errorInfo[0] != 0) {
+			print_r($errorInfo);
+		}
+		// récup des données
+		while ($donnees = $stmt->fetch()) {
+			$commentaires[] = $donnees;
+		}
+		if (!empty($commentaires)) {
+			return $commentaires;
+		} else {
+			return false;
+		}
+	}
+
+	public function addCommentaire($idprojet, $idmembre, $commentaire)
+	{
+		$req = "INSERT INTO Peut_commenter (`Id`, `Id_1`, `commentaire`) VALUES (?,?,?)";
+		$stmt = $this->_db->prepare($req);
+		$stmt->execute(array($idprojet, $idmembre, $commentaire));
+		// pour debuguer les requêtes SQL
+		$errorInfo = $stmt->errorInfo();
+		if ($errorInfo[0] != 0) {
+			print_r($errorInfo);
+		}
+		return true;
+	}
 }

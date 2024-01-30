@@ -1,90 +1,99 @@
 {% extends "index.html.twig" %}
 
 {% block section %}
-<form method="post" action="index.php" class="well" enctype="multipart/form-data">
-   <fieldsetclass="form-group">
-    <legend>Nouveau projet</legend>
+	<form method="post" action="index.php" class="well" enctype="multipart/form-data">
+		<fieldsetclass="form-group">
+			<legend>Nouveau projet</legend>
 
-    <!-- Section projet -->
-    <div class="form-group row">
-      <label for="titre" class="col-sm-2 col-form-label col-form-label-sm">Titre</label>
-      <div class="col-sm-10">
-        <input  type="text" id="titre" class="form-control form-control-sm" name="titre" required placeholder="Titre du projet" />
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="description" class="col-sm-2 col-form-label col-form-label-sm">Description</label>
-      <div class="col-sm-10">
-        <input type="text" id="description" class="form-control form-control-sm" name="description" required placeholder="Description du projet"/>
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="demo" class="col-sm-2 col-form-label col-form-label-sm">Lien démo</label>
-      <div class="col-sm-10">
-        <input  type="text" id="demo" class="form-control form-control-sm" name="demo" required placeholder="Lien de la démo du projet"/>
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="source" class="col-sm-2 col-form-label col-form-label-sm">Lien source</label>
-      <div class="col-sm-10">
-        <input type="test" id="source" class="form-control form-control-sm" name="source" required placeholder="Lien de la source du projet"/>
-      </div>
-    </div>
+			<!-- Section projet -->
+			<div class="form-group row">
+				<label for="titre" class="col-sm-2 col-form-label col-form-label-sm">Titre</label>
+				<div class="col-sm-10">
+					<input type="text" id="titre" class="form-control form-control-sm" name="titre" required placeholder="Titre du projet"/>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="description" class="col-sm-2 col-form-label col-form-label-sm">Description</label>
+				<div class="col-sm-10">
+					<input type="text" id="description" class="form-control form-control-sm" name="description" required placeholder="Description du projet"/>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="demo" class="col-sm-2 col-form-label col-form-label-sm">Lien démo</label>
+				<div class="col-sm-10">
+					<input type="text" id="demo" class="form-control form-control-sm" name="demo" required placeholder="S'il n'y a pas de lien, merci d'écrire 'À venir' dans le champ"/>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="source" class="col-sm-2 col-form-label col-form-label-sm">Lien source</label>
+				<div class="col-sm-10">
+					<input type="test" id="source" class="form-control form-control-sm" name="source" required placeholder="S'il n'y a pas de lien, merci d'écrire 'À venir' dans le champ"/>
+				</div>
+			</div>
 
-    <!-- section catégories -->
-    <div class="form-group row" name="super">
-      <label for="categories" class="col-sm-2 col-form-label col-form-label-sm">Catégories :</label>
-      <select id="categories" class="selectcategories" name="categories">
-        <option value="" selected disabled hidden>Choisir ici</option>
-        {% for categorie in categories %}
-          <option class="optioncategories" value="{{categorie.idcategorie}}">{{categorie.nomcategorie}}</option>
-        {% endfor %}
-      </select>
-    </div>
+			<!-- section catégories -->
+			<div class="form-group row">
+				<label for="categories" class="col-sm-2 col-form-label col-form-label-sm">Catégories :</label>
+				<select id="categories" class="selectcategories form-select" name="categories[]">
+					<option value="" selected ></option>
+					{% for categorie in categories %}
+						<option class="optioncategories" value="{{categorie.idcategorie}}">{{categorie.nomcategorie}}</option>
+					{% endfor %}
+				</select>
+			</div>
 
-    <!-- section tags -->
-    <div class="form-group row">
-      <label for="tags" class="col-sm-2 col-form-label col-form-label-sm">Tags :</label>
-      <select id="tags" class="selecttags" name="tags">
-        <option value="" selected disabled hidden>Choisir ici</option>
-        {% for tag in tags %}
-          <option class="optiontags" value="{{tag.idtag}}">{{tag.nomtag}}</option>
-        {% endfor %}
-      </select>
-    </div>
+			<!-- section tags -->
+			<div class="form-group row">
+				<label for="tags" class="col-sm-2 col-form-label col-form-label-sm">Tags :</label>
+				<select id="tags" class="selecttags form-select" name="tags[]">
+					<option value="" selected></option>
+					{% for tag in tags %}
+						<option class="optiontags" value="{{tag.idtag}}">{{tag.nomtag}}</option>
+					{% endfor %}
+				</select>
+			</div>
 
-    <!-- section ressources -->
-    <div class="form-group row">
-      <label for="ressources" class="col-sm-2 col-form-label col-form-label-sm">Ressources :</label>
-      <select id="ressources" class="selectressources" name="ressources">
-        <option value="" selected disabled hidden>Choisir ici</option>
-        {% for ressource in ressources %}
-          <option class="optionressources" value="{{ressource.idressource}}">{{ressource.intitule}} - {{ressource.identifiant}}</option>
-        {% endfor %}
-      </select>
-    </div>
+			<!-- section ressources -->
+			<div class="form-group row">
+				<label for="ressources" class="col-sm-2 col-form-label col-form-label-sm">Ressources :</label>
+				<select id="ressources" class="selectressources form-select" name="ressources[]">
+					<option value="" selected></option>
+					{% for ressource in ressources %}
+						<option class="optionressources" value="{{ressource.idressource}}">{{ressource.intitule}}
+							-
+							{{ressource.identifiant}}</option>
+					{% endfor %}
+				</select>
+			</div>
 
-    <!-- section contributeurs -->
-    <div class="form-group row">
-      <label for="contributeurs" class="col-sm-2 col-form-label col-form-label-sm">Contributeurs :</label>
-      <select id="contributeurs" class="selectcontributeurs" name="contributeurs">
-        <option value="" selected disabled hidden>Choisir ici</option>
-        {% for contributeur in membres %}
-          <option class="optioncontributeurs" value="{{contributeur.idmembre}}">{{contributeur.nom}}</option>
-        {% endfor %}
-      </select>
-    </div>
+			<!-- section contributeurs -->
+			<div class="form-group row mb-3">
+				<label for="contributeurs" class="col-sm-2 col-form-label col-form-label-sm">Contributeurs :</label>
+				<select id="contributeurs" class="selectcontributeurs form-select" name="contributeurs[]">
+					<option value="" selected></option>
+					{% for contributeur in membres %}
+						<option class="optioncontributeurs" value="{{contributeur.idmembre}}">{{contributeur.nom}}</option>
+					{% endfor %}
+				</select>
+			</div>
 
-    <!-- section images -->
-    <label for="images">Images du projet :</label>
-    <input type="file" id="images" class="selectimages" name="images" accept="image/png, image/jpeg" />
+			<div
+				class="d-flex flex-row justify-content-between">
+				<!-- section images -->
+        <div>
+				<label for="images">Images du projet :</label>
+				<input
+				type="file" multiple id="images" name="images" accept="image/png, image/jpeg"/>
+        </div>
 
-    <!-- idmembre = celui de l'utilisateur connecté    -->
-    <input  type="hidden" id="idmembre" name="idmembre" value="{{ idmembre }}"/> 
-    <!-- valideadmin = forcément égal à 0    -->
-    <input  type="hidden" id="valideadmin" name="valideadmin" value="0"/>
+				<!-- idmembre = celui de l'utilisateur connecté    -->
+				<input
+				type="hidden" id="idmembre" name="idmembre" value="{{ idmembre }}"/>
+				<!-- valideadmin = forcément égal à 0    -->
+				<input type="hidden" id="valideadmin" name="valideadmin" value="0"/>
 
-	  <input type="submit" class="btn btn-primary" name="valider_ajout" value="valider"/>
-   </fieldset>
-   </form>
+				<input type="submit" class="btn btn-dark" name="valider_ajout" value="Valider"/>
+			</div>
+		</fieldset>
+	</form>
 {% endblock %}

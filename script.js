@@ -1,26 +1,30 @@
-function calculcases(){
+function calculcases() {
   let categories = document.getElementsByClassName('selectcategories')
-  let dernierecategorie = categories[categories.length -1]
-  dernierecategorie.addEventListener('input', ajoutercase)
+  if (categories.length <= 2) {
+    let dernierecategorie = categories[categories.length - 1]
+    dernierecategorie.addEventListener('input', ajoutercase)
+  }
 
   let tags = document.getElementsByClassName('selecttags')
-  let derniertag = tags[tags.length -1]
-  derniertag.addEventListener('input', ajoutercase)
+  if (tags.length <= 2) {
+    let derniertag = tags[tags.length - 1]
+    derniertag.addEventListener('input', ajoutercase)
+  }
 
   let ressources = document.getElementsByClassName('selectressources')
-  let derniereressource = ressources[ressources.length -1]
-  derniereressource.addEventListener('input', ajoutercase)
+  if (ressources.length <= 2) {
+    let derniereressource = ressources[ressources.length - 1]
+    derniereressource.addEventListener('input', ajoutercase)
+  }
 
   let contributeurs = document.getElementsByClassName('selectcontributeurs')
-  let derniercontributeur = contributeurs[contributeurs.length -1]
-  derniercontributeur.addEventListener('input', ajoutercase)
-
-  let images = document.getElementsByClassName('selectimages')
-  let derniereimage = images[images.length -1]
-  derniereimage.addEventListener('input', ajoutercase)
+  if (contributeurs.length <= 2) {
+    let derniercontributeur = contributeurs[contributeurs.length - 1]
+    derniercontributeur.addEventListener('input', ajoutercase)
+  }
 }
 
-function getAllElementValues(param) {
+function getAllElementsValues(param) {
   let options = document.getElementsByClassName(param);
   let values = [];
   for (let i = 0; i < options.length; i++) {
@@ -29,7 +33,7 @@ function getAllElementValues(param) {
   return values;
 }
 
-function getAllElementText(param) {
+function getAllElementsText(param) {
   let options = document.getElementsByClassName(param);
   let text = [];
   for (let i = 0; i < options.length; i++) {
@@ -39,15 +43,22 @@ function getAllElementText(param) {
 }
 
 function ajoutercase(event) {
+  event.target.removeEventListener('input', ajoutercase);
   let newSelect = document.createElement('select');
-  let param = 'option' + event.target.name
-  let classname = 'select' + event.target.name;
-  newSelect.className = classname;
+  let option = 'option' + event.target.id;
+  let classname = 'select' + event.target.id;
+  newSelect.className = classname + " form-select";
   newSelect.name = event.target.name;
+  newSelect.id = event.target.id;
 
-  let values = getAllElementValues(param);
-  let text = getAllElementText(param);
-  for(let i = 0;i < values.length;i++){
+  let values = getAllElementsValues(option);
+  let text = getAllElementsText(option);
+  let firstoption = document.createElement('option');
+  firstoption.setAttribute('selected', '');
+  firstoption.textContent = '';
+  newSelect.appendChild(firstoption);
+
+  for (let i = 0; i < values.length; i++) {
     let defaultOption = document.createElement('option');
     defaultOption.value = values[i]
     defaultOption.text = text[i];
@@ -55,7 +66,6 @@ function ajoutercase(event) {
   }
 
   event.target.insertAdjacentElement('afterend', newSelect);
-  event.target.classList.remove(classname)
   calculcases();
 }
 
