@@ -26,7 +26,6 @@ class MembreManager
 	 */
 	public function verif_identification($email, $password)
 	{
-		//echo $login." : ".$password;
 		$req = "SELECT idmembre, nom, prenom, admin FROM Utilisateur WHERE email=:email and mdp=:mdp ";
 		$stmt = $this->_db->prepare($req);
 		$stmt->execute(array(":email" => $email, ":mdp" => $password));
@@ -58,6 +57,11 @@ class MembreManager
 		return $res;
 	}
 
+	/**
+	 * récupération des informations du membre pour les ajouter sur le formulaire
+	 * @param idmembre
+	 * @return infos du membre
+	 */
 	public function getInfosMembre($idmembre)
 	{
 		$req = "SELECT idmembre, nom, prenom, email, idiut, anneenaissance, photo FROM Utilisateur WHERE idmembre=:idmembre";
@@ -73,6 +77,12 @@ class MembreManager
 		return $infos;
 	}
 
+	
+	/**
+	 * changement du nom de la photo de profil sur la base de données
+	 * @param idmembre, photo
+	 * @return 
+	 */
 	public function changementPdp($photo, $idmembre)
 	{
 		$req = "UPDATE Utilisateur SET photo = :photo WHERE idmembre = :idmembre";
@@ -89,6 +99,11 @@ class MembreManager
 		return $ok;
 	}
 
+	/**
+	 * récupération des projets où le membre est contributeur
+	 * @param idmembre
+	 * @return projets
+	 */
 	public function getProjetsMembre($idmembre)
 	{
 		$req = "SELECT idprojet, titre, description, demo, source, valideadmin FROM Projet INNER JOIN A_contribue on Projet.idprojet = A_contribue.Id INNER JOIN Utilisateur on A_contribue.Id_1 = Utilisateur.idmembre WHERE idmembre=:idmembre";
@@ -110,6 +125,38 @@ class MembreManager
 		}
 	}
 
+	/**
+	 * récupère l'image principale des projets ayant des images
+	 * @param idprojet
+	 * @return lienimage
+	 */
+	public function projetImagePrincipale (int $idprojet)
+	{
+		$req = "SELECT lienimage FROM Projet INNER JOIN Ajouterimg on Projet.idprojet = Ajouterimg.Id INNER JOIN Images on Ajouterimg.Id_1 = Images.idimage WHERE idprojet=? LIMIT 1";
+		$stmt = $this->_db->prepare($req);
+		$stmt->execute(array($idprojet));
+		$image ="";
+		// pour debuguer les requêtes SQL
+		$errorInfo = $stmt->errorInfo();
+		if ($errorInfo[0] != 0) {
+			print_r($errorInfo);
+		}
+
+		// récup des données
+		$image = $stmt->fetchColumn();
+		
+		if ($image == "") {
+			return false;
+		} else {
+			return $image;
+		}
+	}
+
+	/**
+	 * modification des nouvelles informations du membre sur la BDD
+	 * @param Membre
+	 * @return 
+	 */
 	public function validerModifMembre($membre)
 	{
 		$req = "UPDATE Utilisateur SET nom = ?, prenom = ?, email = ?, idiut = ?, anneenaissance = ? WHERE idmembre = ?";

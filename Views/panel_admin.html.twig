@@ -3,24 +3,26 @@
 {% block section %}
 	{{message}}
 	<h2 class="mb-3">Projets à valider</h2>
-	<div class="container d-flex justify-content-around row gap-3">
-		{% for projet in projets %}
+	<div class="d-flex justify-content-center align-items-center">
+		<div class="container d-flex justify-content-around row gap-3 mx-auto">
+			{% for projet in projets %}
 
-			<div class="col mb-4 mx-auto">
-				<div class="card" style="width: 18rem;">
-					<img src="./Views/imgprojet/{{images.lienimage}}" class="card-img-top" alt="{{images.lienimage}}">
-					<div class="card-body">
-						<h5 class="card-title">{{projet.titre}}</h5>
-						<p class="card-text">{{projet.description}}</p>
-						<a href="?action=infoprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-dark">Voir plus</a>
-						<a href="?action=validerprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-success">
-							Valider le projet
-						</a>
+				<div class="col mb-4 mx-auto">
+					<div class="card" style="width: 18rem;">
+						<img src="./Views/imgprojet/{{projet.imageprincipale}}" class="card-img-top" alt="{{projet.imageprincipale}}">
+						<div class="card-body">
+							<h5 class="card-title">{{projet.titre}}</h5>
+							<p class="card-text">{{projet.description}}</p>
+							<a href="?action=infoprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-dark">Voir plus</a>
+							<a href="?action=validerprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-success">
+								Valider le projet
+							</a>
+						</div>
 					</div>
 				</div>
-			</div>
 
-		{% endfor %}
+			{% endfor %}
+		</div>
 	</div>
 
 	<form method="post" action="index.php" class="well">
@@ -36,14 +38,14 @@
 			<option value="S4">S4</option>
 		</select>
 		<label for="intitule" class="col-sm-2 col-form-label col-form-label-sm">Code de la ressource</label>
-		<input type="text" id="intitule" class="form-control form-control-sm" name="intitule" placeholder="Ex R101..."/>
+		<input type="text" id="intitule" class="form-control form-control-sm" name="intitule" placeholder="Ex R101...">
 		<label for="titre" class="col-sm-2 col-form-label col-form-label-sm">Nom</label>
-		<input type="text" id="nomcomplet" class="form-control form-control-sm" name="nomcomplet" placeholder="Nom complet de la ressource"/>
+		<input type="text" id="nomcomplet" class="form-control form-control-sm" name="nomcomplet" placeholder="Nom complet de la ressource">
 		<legend>Une catégorie :</legend>
-		<input type="text" id="categorie" class="form-control form-control-sm" name="categorie" placeholder="Nom de la catégorie"/>
+		<input type="text" id="categorie" class="form-control form-control-sm" name="categorie" placeholder="Nom de la catégorie">
 		<legend>Un tag :</legend>
-		<input type="text" id="tag" class="form-control form-control-sm" name="tag" placeholder="Nom du tag"/>
-		<input type="submit" class="btn btn-dark mt-3" name="ajoutercategorie" value="Valider"/>
+		<input type="text" id="tag" class="form-control form-control-sm" name="tag" placeholder="Nom du tag">
+		<input type="submit" class="btn btn-dark mt-3" name="ajoutercategorie" value="Valider">
 
 	</fieldset>
 </form>
@@ -81,7 +83,7 @@
 				{% endfor %}
 			</select>
 		</div>
-		<input type="submit" class="btn btn-dark mt-3" name="supprimercategorie" value="Valider"/>
+		<input type="submit" class="btn btn-dark mt-3" name="supprimercategorie" value="Valider">
 
 	</fieldset>
 </form>
@@ -101,7 +103,7 @@
 			<tr>
 				<td>{{membre.nom}}</td>
 				<td>{{membre.prenom}}</td>
-				<td><img id="pdp" src="./Views/imgprofil/{{membre.photo}}" alt="photodeprofil"></td>
+				<td><img id="pdp" src="./Views/imgprofil/{{membre.photo}}" alt="photodeprofil" class="photodeprofilcontributeur"></td>
 				<td>
 					<a href="?action=modifiermembre&idmembre={{membre.idmembre}}" name="idmembre" value="{{membre.idmembre}}" class="btn btn-dark">
 						Modifier le membre
@@ -121,26 +123,27 @@
 </table>
 
 <h2>Liste des projets</h2>
+<div class="d-flex justify-content-center align-items-center">
+	<div class="container d-flex justify-content-around row gap-3 mx-auto">
+		{% for projet in projetsvalides %}
 
-<div class="container d-flex justify-content-around row gap-3">
-	{% for projet in projetsvalides %}
-
-		<div class="col mb-4 mx-auto">
-			<div class="card" style="width: 18rem;">
-				<img src="./Views/imgprojet/{{images.lienimage}}" class="card-img-top" alt="{{images.lienimage}}">
-				<div class="card-body">
-					<h5 class="card-title">{{projet.titre}}</h5>
-					<p class="card-text">{{projet.description}}</p>
-					<a href="?action=infoprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-dark">Voir plus</a>
-					<a href="?action=modifprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-primary">
-						Modifier le projet
-					</a>
-					<a href="?action=supprimerprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-danger">
-						Supprimer le projet
-					</a>
+			<div class="col mb-4 mx-auto">
+				<div class="card" style="width: 18rem;">
+					<img src="./Views/imgprojet/{{projet.imageprincipale}}" class="card-img-top img-fluid imageprincipale" alt="{{projet.imageprincipale}}">
+					<div class="card-body">
+						<h5 class="card-title">{{projet.titre}}</h5>
+						<p class="card-text">{{projet.description}}</p>
+						<a href="?action=infoprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-dark">Voir plus</a>
+						<a href="?action=modifprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-primary">
+							Modifier le projet
+						</a>
+						<a href="?action=supprimerprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-danger">
+							Supprimer le projet
+						</a>
+					</div>
 				</div>
 			</div>
-		</div>
 
-	{% endfor %}
+		{% endfor %}
+	</div>
 </div>{% endblock %}

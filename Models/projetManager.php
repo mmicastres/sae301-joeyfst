@@ -18,14 +18,14 @@ class ProjetManager
 	}
 
 	/**
-	 * retourne l'ensemble des itinéraires présents dans la BD 
+	 * retourne l'ensemble des projets présents dans la BD 
 	 * @return Projets[]
 	 */
 	public function getListProjets()
 	{
 		// définitions des objets à récupérer
 		$projets = array();
-		$req = "SELECT idprojet, titre, description, valideadmin FROM Projet";
+		$req = "SELECT idprojet, titre, description FROM Projet WHERE valideadmin = 1";
 		$stmt = $this->_db->prepare($req);
 		$stmt->execute();
 		// pour debuguer les requêtes SQL
@@ -41,7 +41,7 @@ class ProjetManager
 	}
 
 	/**
-	 * Recherche dans la BD d'un itineraire à partir de son id
+	 * Recherche dans la BD d'un projet à partir de son id
 	 * @param int $idprojet 
 	 * @return Projet
 	 */
@@ -59,6 +59,11 @@ class ProjetManager
 		return $projet;
 	}
 
+	/**
+	 * Recherche dans la BD des catégories d'un projet à partir de son id
+	 * @param int $idprojet 
+	 * @return categories
+	 */
 	public function projetCategories(int $idprojet)
 	{
 		$req = "SELECT nomcategorie FROM Projet INNER JOIN Ajoutercat on Projet.idprojet = Ajoutercat.Id INNER JOIN Categories on Ajoutercat.Id_1 = Categories.idcategorie WHERE idprojet=?";
@@ -80,6 +85,11 @@ class ProjetManager
 		}
 	}
 
+	/**
+	 * Recherche dans la BD de toutes les catégories
+	 * @param rien
+	 * @return categories[]
+	 */
 	public function allCategories()
 	{
 		$req = "SELECT idcategorie, nomcategorie FROM Categories";
@@ -97,6 +107,11 @@ class ProjetManager
 		return $categories;
 	}
 
+	/**
+	 * Recherche dans la BD des tags d'un projet à partir de son id
+	 * @param int $idprojet 
+	 * @return tags
+	 */
 	public function projetTags(int $idprojet)
 	{
 		$req = "SELECT nomtag FROM Projet INNER JOIN Ajoutertag on Projet.idprojet = Ajoutertag.Id INNER JOIN Tags on Ajoutertag.Id_1 = Tags.idtag WHERE idprojet=?";
@@ -118,6 +133,11 @@ class ProjetManager
 		}
 	}
 
+	/**
+	 * Recherche dans la BD de tous les tags 
+	 * @param rien
+	 * @return tags[]
+	 */
 	public function allTags()
 	{
 		$req = "SELECT idtag, nomtag FROM Tags";
@@ -135,6 +155,11 @@ class ProjetManager
 		return $tags;
 	}
 
+	/**
+	 * Recherche dans la BD des ressources d'un projet à partir de son id
+	 * @param int $idprojet 
+	 * @return ressources
+	 */
 	public function projetRessources(int $idprojet)
 	{
 		$req = "SELECT semestre, intitule, identifiant FROM Projet INNER JOIN Contexte on Projet.idprojet = Contexte.Id INNER JOIN Ressource on Contexte.Id_1 = Ressource.idressource WHERE idprojet=?";
@@ -158,6 +183,11 @@ class ProjetManager
 		}
 	}
 
+	/**
+	 * Recherche dans la BD de toutes les ressources
+	 * @param 
+	 * @return ressources[]
+	 */
 	public function allRessources()
 	{
 		$req = "SELECT idressource, intitule, identifiant FROM Ressource";
@@ -176,6 +206,11 @@ class ProjetManager
 		return $ressources;
 	}
 
+	/**
+	 * Recherche dans la BD des contributeurs d'un projet à partir de son id
+	 * @param int $idprojet 
+	 * @return contributeurs
+	 */
 	public function projetContributeurs(int $idprojet)
 	{
 		$req = "SELECT idmembre, nom, prenom, photo FROM Projet INNER JOIN A_contribue on Projet.idprojet = A_contribue.Id INNER JOIN Utilisateur on A_contribue.Id_1 = Utilisateur.idmembre WHERE idprojet=?";
@@ -197,6 +232,11 @@ class ProjetManager
 		}
 	}
 
+	/**
+	 * Recherche dans la BD de tous les utilisateurs
+	 * @param 
+	 * @return Membres
+	 */
 	public function allUsers()
 	{
 		$req = "SELECT idmembre, nom FROM Utilisateur";
@@ -214,6 +254,11 @@ class ProjetManager
 		return $noms;
 	}
 
+	/**
+	 * Vérifie qu'un membre est contributeur d'un projet
+	 * @param int $idmembre
+	 * @return true
+	 */
 	public function verifContributeur($idprojet, $idmembre)
 	{
 		$estContributeur = false;
@@ -236,30 +281,36 @@ class ProjetManager
 		return $estContributeur;
 	}
 
-	public function projetImages(int $idprojet)
+	/**
+	 * Recherche dans la BD la première image d'un projet à partir de son id
+	 * @param int $idprojet 
+	 * @return lienimage
+	 */
+	public function projetImagePrincipale(int $idprojet)
 	{
-		$req = "SELECT lienimage FROM Projet INNER JOIN Ajouterimg on Projet.idprojet = Ajouterimg.Id INNER JOIN Images on Ajouterimg.Id_1 = Images.idimage WHERE idprojet=?";
+		$req = "SELECT lienimage FROM Projet INNER JOIN Ajouterimg on Projet.idprojet = Ajouterimg.Id INNER JOIN Images on Ajouterimg.Id_1 = Images.idimage WHERE idprojet=? LIMIT 1";
 		$stmt = $this->_db->prepare($req);
 		$stmt->execute(array($idprojet));
+		$image = "";
 		// pour debuguer les requêtes SQL
 		$errorInfo = $stmt->errorInfo();
 		if ($errorInfo[0] != 0) {
 			print_r($errorInfo);
 		}
+
 		// récup des données
-		while ($donnees = $stmt->fetch()) {
-			$images[] = $donnees;
-		}
-		if (empty($images)) {
-			return null;
+		$image = $stmt->fetchColumn();
+
+		if ($image == "") {
+			return false;
 		} else {
-			return $images;
+			return $image;
 		}
 	}
 
 	/**
-	 * ajout d'un itineraire dans la BD
-	 * @param itineraire à ajouter
+	 * ajout d'un projet dans la BD
+	 * @param Projet à ajouter
 	 * @return int true si l'ajout a bien eu lieu, false sinon
 	 */
 	public function addProjet(Projet $projet)
@@ -281,6 +332,11 @@ class ProjetManager
 		return $res;
 	}
 
+	/**
+	 * Lie une catégorie à un projet en ajoutant les deux id dans une table liant les deux entités
+	 * @param int $idprojet, $idcategorie
+	 * @return 
+	 */
 	public function linkProjetCategories(int $idprojet, $idcategorie)
 	{
 		$req = "INSERT INTO Ajoutercat (Id, Id_1) VALUES (?,?)";
@@ -294,6 +350,11 @@ class ProjetManager
 		return;
 	}
 
+	/**
+	 * Lie un tag à un projet en ajoutant les deux id dans une table liant les deux entités
+	 * @param int $idprojet, $idtag
+	 * @return 
+	 */
 	public function linkProjetTags(int $idprojet, $idtag)
 	{
 		$req = "INSERT INTO Ajoutertag (Id, Id_1) VALUES (?,?)";
@@ -307,6 +368,11 @@ class ProjetManager
 		return;
 	}
 
+	/**
+	 * Lie une ressource à un projet en ajoutant les deux id dans une table liant les deux entités
+	 * @param int $idprojet, $idressource
+	 * @return 
+	 */
 	public function linkProjetRessources(int $idprojet, $idressource)
 	{
 		$req = "INSERT INTO Contexte (Id, Id_1) VALUES (?,?)";
@@ -320,6 +386,11 @@ class ProjetManager
 		return;
 	}
 
+	/**
+	 * Lie un contributeur à un projet en ajoutant les deux id dans une table liant les deux entités
+	 * @param int $idprojet, $idmembre
+	 * @return 
+	 */
 	public function linkProjetContributeurs(int $idprojet, $idmembre)
 	{
 		$req = "INSERT INTO A_contribue (Id, Id_1) VALUES (?,?)";
@@ -333,6 +404,11 @@ class ProjetManager
 		return;
 	}
 
+	/**
+	 * Ajoute une image dans la base de données
+	 * @param $nomimg
+	 * @return $idimg
+	 */
 	public function addImgProjet(string $nomimg)
 	{
 		// calcul d'un nouvel id image non déja utilisé = Maximum + 1
@@ -353,6 +429,11 @@ class ProjetManager
 		return $idimg;
 	}
 
+	/**
+	 * Lie une image à un projet en ajoutant les deux id dans une table liant les deux entités
+	 * @param int $idprojet, $idimg
+	 * @return 
+	 */
 	public function linkProjetImages(int $idprojet, $idimg)
 	{
 		$req = "INSERT INTO Ajouterimg (Id, Id_1) VALUES (?,?)";
@@ -366,6 +447,11 @@ class ProjetManager
 		return;
 	}
 
+	/**
+	 * Modifie les informations d'un projet dans la BDD
+	 * @param Projet
+	 * @return 
+	 */
 	public function modifProjet(Projet $projet)
 	{
 		$req = "UPDATE Projet SET titre = :titre, " . "description = :description, " . "demo = :demo, " . "source = :source " . "WHERE idprojet = :idprojet";
@@ -381,7 +467,7 @@ class ProjetManager
 
 	/**
 	 * suppression d'un projet dans la base de données
-	 * @param Projet
+	 * @param $idprojet
 	 * @return boolean true si suppression, false sinon
 	 */
 	public function deleteProjet($idprojet): bool
@@ -391,6 +477,11 @@ class ProjetManager
 		return $stmt->execute(array($idprojet));
 	}
 
+	/**
+	 * suppression du lien entre un projet et ses catégories dans la base de données
+	 * @param $idprojet
+	 * @return boolean true si suppression, false sinon
+	 */
 	public function deleteProjetCategories($idprojet)
 	{
 		$req = "DELETE FROM Ajoutercat WHERE Id = ?";
@@ -398,6 +489,11 @@ class ProjetManager
 		return $stmt->execute(array($idprojet));
 	}
 
+	/**
+	 * suppression du lien entre un projet et ses tags dans la base de données
+	 * @param $idprojet
+	 * @return boolean true si suppression, false sinon
+	 */
 	public function deleteProjetTags($idprojet)
 	{
 		$req = "DELETE FROM Ajoutertag WHERE Id = ?";
@@ -405,6 +501,11 @@ class ProjetManager
 		return $stmt->execute(array($idprojet));
 	}
 
+	/**
+	 * suppression du lien entre un projet et ses ressources dans la base de données
+	 * @param $idprojet
+	 * @return boolean true si suppression, false sinon
+	 */
 	public function deleteProjetRessources($idprojet)
 	{
 		$req = "DELETE FROM Contexte WHERE Id = ?";
@@ -412,6 +513,11 @@ class ProjetManager
 		return $stmt->execute(array($idprojet));
 	}
 
+	/**
+	 * suppression du lien entre un projet et ses contributeurs dans la base de données
+	 * @param $idprojet
+	 * @return boolean true si suppression, false sinon
+	 */
 	public function deleteProjetContributeurs($idprojet)
 	{
 		$req = "DELETE FROM A_contribue WHERE Id = ?";
@@ -419,6 +525,35 @@ class ProjetManager
 		return $stmt->execute(array($idprojet));
 	}
 
+	/**
+	 * suppression du lien entre un projet et ses notes dans la base de données
+	 * @param $idprojet
+	 * @return boolean true si suppression, false sinon
+	 */
+	public function deleteProjetNotes($idprojet)
+	{
+		$req = "DELETE FROM Peut_noter WHERE Id = ?";
+		$stmt = $this->_db->prepare($req);
+		return $stmt->execute(array($idprojet));
+	}
+
+	/**
+	 * suppression du lien entre un projet et ses commentaires dans la base de données
+	 * @param $idprojet
+	 * @return boolean true si suppression, false sinon
+	 */
+	public function deleteProjetCommentaires($idprojet)
+	{
+		$req = "DELETE FROM Peut_commenter WHERE Id = ?";
+		$stmt = $this->_db->prepare($req);
+		return $stmt->execute(array($idprojet));
+	}
+
+	/**
+	 * récupère l'id des images d'un projet avec l'id du projet
+	 * @param $idprojet
+	 * @return idimg[]
+	 */
 	public function getIdImages($idprojet)
 	{
 		$req = "SELECT idimage FROM Projet INNER JOIN Ajouterimg on Projet.idprojet = Ajouterimg.Id INNER JOIN Images on Ajouterimg.Id_1 = Images.idimage WHERE idprojet=?";
@@ -431,13 +566,23 @@ class ProjetManager
 		}
 	}
 
-	public function deleteImages($idprojet)
+	/**
+	 * suppression d'une image de la BDD
+	 * @param $idimg
+	 * @return boolean true si suppression, false sinon
+	 */
+	public function deleteImages($idimg)
 	{
 		$req = "DELETE FROM Images WHERE idimage = ?";
 		$stmt = $this->_db->prepare($req);
-		return $stmt->execute(array($idprojet));
+		return $stmt->execute(array($idimg));
 	}
 
+	/**
+	 * suppression du lien entre un projet et ses images dans la base de données
+	 * @param $idprojet
+	 * @return boolean true si suppression, false sinon
+	 */
 	public function deleteProjetImages($idprojet)
 	{
 		$req = "DELETE FROM Ajouterimg WHERE Id = ?";
@@ -446,58 +591,49 @@ class ProjetManager
 	}
 
 	/**
-	 * nombre d'itinéraires dans la base de données
-	 * @return int le nb d'itinéraires
-	 */
-	public function count(): int
-	{
-		$stmt = $this->_db->prepare('SELECT COUNT(*) FROM itineraire');
-		$stmt->execute();
-		return $stmt->fetchColumn();
-	}
-
-	/**
 	 * méthode de recherche de projets dans la BD à partir des critères passés en paramètre, fonction partiellement reprise du modèle des itinéraires
+	 * @param formulaire
 	 * @return Projet[]
 	 */
 	public function search($titre, $description, $categorie, $tag, $ressource)
 	{
 		$req = "SELECT idprojet, titre, description, valideadmin FROM Projet";
-		$cond = " WHERE";
+		$cond = " WHERE valideadmin = 1";
+		if ($categorie != "" || $tag != "" || $ressource != "" || $titre != "" || $description != "") { // si au moins un champ du formulaire est rempli, on continue la requête
+			$cond = $cond . " AND";
+		}
 
 		if ($categorie != "") {
 			$req = $req . " INNER JOIN Ajoutercat on Projet.idprojet = Ajoutercat.Id INNER JOIN Categories on Ajoutercat.Id_1 = Categories.idcategorie";
-			$cond = $cond . " idcategorie=" . $categorie;
-			if ($tag != "" || $ressource != "" || $titre != "" || $description != "") {
+			$cond = $cond . " idcategorie=" . $categorie; // on ajoute ce paramètre à la requête
+			if ($tag != "" || $ressource != "" || $titre != "" || $description != "") { // si au moins un autre champ non traité du formulaire est rempli, on continue la requête
 				$cond = $cond . " AND";
 			}
 		}
 		if ($tag != "") {
 			$req = $req . " INNER JOIN Ajoutertag on Projet.idprojet = Ajoutertag.Id INNER JOIN Tags on Ajoutertag.Id_1 = Tags.idtag";
-			$cond = $cond . " idtag=" . $tag;
-			if ($ressource != "" || $titre != "" || $description != "") {
+			$cond = $cond . " idtag=" . $tag; // on ajoute ce paramètre à la requête
+			if ($ressource != "" || $titre != "" || $description != "") { // si au moins un autre champ non traité du formulaire est rempli, on continue la requête
 				$cond = $cond . " AND";
 			}
 		}
 		if ($ressource != "") {
 			$req = $req . " INNER JOIN Contexte on Projet.idprojet = Contexte.Id INNER JOIN Ressource on Contexte.Id_1 = Ressource.idressource";
-			$cond = $cond . " idressource=" . $ressource;
-			if ($titre != "" || $description != "") {
+			$cond = $cond . " idressource=" . $ressource; // on ajoute ce paramètre à la requête
+			if ($titre != "" || $description != "") { // si au moins un autre champ non traité du formulaire est rempli, on continue la requête
 				$cond = $cond . " AND";
 			}
 		}
 		if ($titre != "") {
-			$cond = $cond . " titre like '%" . $titre . "%'";
-			if ($description != "") {
+			$cond = $cond . " titre like '%" . $titre . "%'"; // on ajoute ce paramètre à la requête
+			if ($description != "") { // si au moins un autre champ non traité du formulaire est rempli, on continue la requête
 				$cond = $cond . " AND";
 			}
 		}
-		if ($titre != "") {
-			$cond = $cond . " description like '%" . $description . "%'";
+		if ($description != "") {
+			$cond = $cond . " description like '%" . $description . "%'"; // on ajoute ce paramètre à la requête
 		}
-		if ($cond != " WHERE") {
-			$req = $req . $cond;
-		}
+		$req = $req . $cond;
 
 		// execution de la requete				
 		$stmt = $this->_db->prepare($req);
@@ -515,6 +651,11 @@ class ProjetManager
 		return $projets;
 	}
 
+	/**
+	 * suppression la note d'un utilisateur d'un projet
+	 * @param $idprojet, $idmembre
+	 * @return boolean true si suppression, false sinon
+	 */
 	public function deleteNote($idprojet, $idmembre)
 	{
 		$req = "DELETE FROM Peut_noter WHERE Id = ? AND Id_1 = ?";
@@ -528,6 +669,11 @@ class ProjetManager
 		return;
 	}
 
+	/**
+	 * ajoute la note d'un utilisateur d'un projet
+	 * @param $idprojet, $idmembre, $note
+	 * @return boolean true si suppression, false sinon
+	 */
 	public function addNote($idprojet, $idmembre, $note)
 	{
 		$req = "INSERT INTO Peut_noter (`Id`, `Id_1`, `note`) VALUES (?,?,?)";
@@ -541,6 +687,11 @@ class ProjetManager
 		return true;
 	}
 
+	/**
+	 * récupère les notes d'un projet
+	 * @param $idprojet
+	 * @return notes[]
+	 */
 	public function getNotes($idprojet)
 	{
 		$req = "SELECT Id_1, note FROM Peut_noter WHERE Id = ?";
@@ -562,9 +713,14 @@ class ProjetManager
 		}
 	}
 
+	/**
+	 * récupère les commentaires d'un projet
+	 * @param $idprojet
+	 * @return commentaires[]
+	 */
 	public function getCommentaires($idprojet)
 	{
-		$req = "SELECT commentaire, nom, prenom, photo FROM Peut_commenter INNER JOIN Utilisateur ON Peut_commenter.Id_1 = Utilisateur.idmembre WHERE Id = ?";
+		$req = "SELECT commentaire, idmembre, nom, prenom, photo FROM Peut_commenter INNER JOIN Utilisateur ON Peut_commenter.Id_1 = Utilisateur.idmembre WHERE Id = ?";
 		$stmt = $this->_db->prepare($req);
 		$stmt->execute(array($idprojet));
 		// pour debuguer les requêtes SQL
@@ -583,6 +739,11 @@ class ProjetManager
 		}
 	}
 
+	/**
+	 * ajoute le commentaire d'un utilisateur d'un projet
+	 * @param $idprojet, $idmembre, $commentaire
+	 * @return boolean true si suppression, false sinon
+	 */
 	public function addCommentaire($idprojet, $idmembre, $commentaire)
 	{
 		$req = "INSERT INTO Peut_commenter (`Id`, `Id_1`, `commentaire`) VALUES (?,?,?)";

@@ -26,9 +26,14 @@ body {
 	font-family: 'Lexend', sans-serif;
 }
 
+.imageprincipale{
+    max-height: 100px;
+    width: auto;
+}
+
 .photodeprofilcontributeur {
-	width: 200px;
-	height: 200px;
+	width: 100px;
+	height: 100px;
 }
 
 #photodeprofilespaceutilisateur {

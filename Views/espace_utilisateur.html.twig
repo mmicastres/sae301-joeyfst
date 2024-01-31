@@ -46,30 +46,34 @@
 			<img id="photodeprofilespaceutilisateur" src="./Views/imgprofil/{{infos.photo}}" alt="photodeprofil">
 			<div>
 				<label for="photo">Changer de photo de profil :</label>
-				<input type="file" id="photo" name="photo" accept="image/png, image/jpeg"/>
-				<input type="hidden" id="anciennepdp" name="anciennepdp" value="{{infos.photo}}"/>
+				<input type="file" id="photo" name="photo" accept="image/png, image/jpeg">
+				<input type="hidden" id="anciennepdp" name="anciennepdp" value="{{infos.photo}}">
 			</div>
 			<input type="submit" class="btn btn-dark mt-3" name="changementpdp" value="Changer de photo de profil">
 		</div>
 	</form>
 </div>
 
+<h2 class="text-center mb-4">Tous mes projets</h2>
+
 <a href="?action=ajoutprojet" class="ms-5 btn btn-dark mb-3">
 	Ajouter un projet
 </a>
 
-<div class="container d-flex justify-content-around row gap-3">
-	{% for projet in projets %}
-		<div class="col mb-4 mx-auto">
-			<div class="card" style="width: 18rem;">
-				<img src="./Views/imgprojet/{{images.lienimage}}" class="card-img-top" alt="{{images.lienimage}}">
-				<div class="card-body">
-					<h5 class="card-title">{{projet.titre}}</h5>
-					<p class="card-text">{{projet.description}}</p>
-					<a href="?action=infoprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-dark">Voir plus</a>
+	<div class="d-flex justify-content-center align-items-center">
+		<div class="container d-flex justify-content-around row gap-3 mx-auto">
+		{% for projet in projets %}
+			<div class="col mb-4 mx-auto">
+				<div class="card" style="width: 18rem;">
+					<img src="./Views/imgprojet/{{projet.imageprincipale}}" class="card-img-top" alt="{{projet.imageprincipale}}">
+					<div class="card-body">
+						<h5 class="card-title">{{projet.titre}}</h5>
+						<p class="card-text">{{projet.description}}</p>
+						<a href="?action=infoprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-dark">Voir plus</a>
+					</div>
 				</div>
 			</div>
-		</div>
 
-	{% endfor %}
+		{% endfor %}
+	</div>
 </div>{% endblock %}

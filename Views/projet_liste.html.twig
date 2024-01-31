@@ -14,9 +14,9 @@
 	</div>
 
 	<form method="post" action="index.php" class="well">
-		<input type="text" id="titre" class="form-control form-control-sm" name="titre" placeholder="Titre du projet"/>
+		<input type="text" id="titre" class="form-control form-control-sm" name="titre" placeholder="Titre du projet">
 		<input
-		type="text" id="description" class="form-control form-control-sm" name="description" placeholder="Description du projet"/>
+		type="text" id="description" class="form-control form-control-sm" name="description" placeholder="Description du projet">
 
 		<!-- section catégories -->
 		<div class="form-group row">
@@ -53,26 +53,25 @@
 			</select>
 		</div>
 
-		<input type="submit" class="btn btn-dark mt-2" name="recherche" value="Valider"/>
+		<input type="submit" class="btn btn-dark mt-2" name="recherche" value="Valider">
 	</form>
 
-	<div class="container d-flex justify-content-around row gap-3">
-		{% for projet in projets %}
+	<div class="d-flex justify-content-center align-items-center">
+		<div class="container d-flex justify-content-around row gap-3 mx-auto">
+			{% for projet in projets %}
 
-			{% if projet.valideadmin == 1 %}
-
-				<div class="col mb-4 mx-auto">
+				<div class="col-3 mb-4">
 					<div class="card" style="width: 18rem;">
-						<img src="./Views/imgprojet/{{images.lienimage}}" class="card-img-top" alt="{{images.lienimage}}">
+						<img src="./Views/imgprojet/{{projet.imageprincipale}}" class="card-img-top" alt="{{projet.imageprincipale}}">
 						<div class="card-body">
 							<h5 class="card-title">{{projet.titre}}</h5>
 							<p class="card-text">{{projet.description}}</p>
-							<a href="?action=infoprojet&idprojet={{projet.idprojet}}" name="idprojet" value="{{projet.idprojet}}" class="btn btn-dark">Voir plus</a>
+							<a href="?action=infoprojet&idprojet={{projet.idprojet}}" class="btn btn-dark">Voir plus</a>
 						</div>
 					</div>
 				</div>
 
-			{% endif %}
-		{% endfor %}
+			{% endfor %}
+		</div>
 	</div>
 {% endblock %}

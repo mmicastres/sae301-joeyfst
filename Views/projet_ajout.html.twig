@@ -9,25 +9,25 @@
 			<div class="form-group row">
 				<label for="titre" class="col-sm-2 col-form-label col-form-label-sm">Titre</label>
 				<div class="col-sm-10">
-					<input type="text" id="titre" class="form-control form-control-sm" name="titre" required placeholder="Titre du projet"/>
+					<input type="text" id="titre" class="form-control form-control-sm" name="titre" required placeholder="Titre du projet">
 				</div>
 			</div>
 			<div class="form-group row">
 				<label for="description" class="col-sm-2 col-form-label col-form-label-sm">Description</label>
 				<div class="col-sm-10">
-					<input type="text" id="description" class="form-control form-control-sm" name="description" required placeholder="Description du projet"/>
+					<input type="text" id="description" class="form-control form-control-sm" name="description" required placeholder="Description du projet">
 				</div>
 			</div>
 			<div class="form-group row">
 				<label for="demo" class="col-sm-2 col-form-label col-form-label-sm">Lien démo</label>
 				<div class="col-sm-10">
-					<input type="text" id="demo" class="form-control form-control-sm" name="demo" required placeholder="S'il n'y a pas de lien, merci d'écrire 'À venir' dans le champ"/>
+					<input type="text" id="demo" class="form-control form-control-sm" name="demo" required placeholder="S'il n'y a pas de lien, merci d'écrire 'À venir' dans le champ">
 				</div>
 			</div>
 			<div class="form-group row">
 				<label for="source" class="col-sm-2 col-form-label col-form-label-sm">Lien source</label>
 				<div class="col-sm-10">
-					<input type="test" id="source" class="form-control form-control-sm" name="source" required placeholder="S'il n'y a pas de lien, merci d'écrire 'À venir' dans le champ"/>
+					<input type="test" id="source" class="form-control form-control-sm" name="source" required placeholder="S'il n'y a pas de lien, merci d'écrire 'À venir' dans le champ">
 				</div>
 			</div>
 
@@ -35,7 +35,7 @@
 			<div class="form-group row">
 				<label for="categories" class="col-sm-2 col-form-label col-form-label-sm">Catégories :</label>
 				<select id="categories" class="selectcategories form-select" name="categories[]">
-					<option value="" selected ></option>
+					<option value="" selected></option>
 					{% for categorie in categories %}
 						<option class="optioncategories" value="{{categorie.idcategorie}}">{{categorie.nomcategorie}}</option>
 					{% endfor %}
@@ -72,7 +72,7 @@
 				<select id="contributeurs" class="selectcontributeurs form-select" name="contributeurs[]">
 					<option value="" selected></option>
 					{% for contributeur in membres %}
-						<option class="optioncontributeurs" value="{{contributeur.idmembre}}">{{contributeur.nom}}</option>
+						<option class="optioncontributeurs" value="{{contributeur.idmembre}}">{{contributeur.nom}} {{contributeur.prenom}}</option>
 					{% endfor %}
 				</select>
 			</div>
@@ -80,19 +80,18 @@
 			<div
 				class="d-flex flex-row justify-content-between">
 				<!-- section images -->
-        <div>
-				<label for="images">Images du projet :</label>
-				<input
-				type="file" multiple id="images" name="images" accept="image/png, image/jpeg"/>
-        </div>
+				<div>
+					<label for="images">Images du projet :</label>
+					<input type="file" id="images" name="images" accept="image/png, image/jpeg">
+				</div>
 
 				<!-- idmembre = celui de l'utilisateur connecté    -->
 				<input
-				type="hidden" id="idmembre" name="idmembre" value="{{ idmembre }}"/>
+				type="hidden" id="idmembre" name="idmembre" value="{{ idmembre }}">
 				<!-- valideadmin = forcément égal à 0    -->
-				<input type="hidden" id="valideadmin" name="valideadmin" value="0"/>
+				<input type="hidden" id="valideadmin" name="valideadmin" value="0">
 
-				<input type="submit" class="btn btn-dark" name="valider_ajout" value="Valider"/>
+				<input type="submit" class="btn btn-dark" name="valider_ajout" value="Valider">
 			</div>
 		</fieldset>
 	</form>

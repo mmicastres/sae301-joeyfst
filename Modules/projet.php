@@ -9,6 +9,7 @@ class Projet {
 	private $_demo;
 	private $_source;
 	private $_valideadmin;
+	private $_imageprincipale;
 		
 	// contructeur
 	public function __construct(array $donnees) {
@@ -19,6 +20,7 @@ class Projet {
 		if (isset($donnees['demo'])) { $this->_demo= $donnees['demo']; }
 		if (isset($donnees['source'])) { $this->_source = $donnees['source']; }
 		if (isset($donnees['valideadmin']))  { $this->_valideadmin =  $donnees['valideadmin'];}		
+		if (isset($donnees['imageprincipale']))  { $this->_imageprincipale =  $donnees['imageprincipale'];}		
 	}           
 	// GETTERS //
 	public function idprojet()       { return $this->_idprojet;}
@@ -27,6 +29,7 @@ class Projet {
 	public function demo() { return $this->_demo;}
 	public function source() { return $this->_source;}
 	public function valideadmin()  { return $this->_valideadmin;}
+	public function imageprincipale()  { return $this->_imageprincipale;}
 		
 	// SETTERS //
 	public function setIdProjet(int $idprojet)             { $this->_idprojet = $idprojet; }
@@ -35,6 +38,7 @@ class Projet {
 	public function setDemo(string $demo) { $this->_demo = $demo; }
 	public function setSource($source) { $this->_source = $source; }
 	public function setValideadmin($valideadmin)   { $this->_valideadmin = $valideadmin; }
+	public function setImagePrincipale($imageprincipale)   { $this->_imageprincipale = $imageprincipale; }
 
 }
 

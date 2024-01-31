@@ -22,6 +22,7 @@ $message = "";
 if (!isset($_SESSION['acces'])) {
   $_SESSION['acces'] = "non";
   $_SESSION['admin'] = 0;
+  $_SESSION['idmembre'] = "";
 }
 
 // accéder au formulaire de connexion
@@ -64,10 +65,12 @@ if (isset($_GET["action"]) && $_GET["action"] == "monespace") {
   $memController->espaceUtilisateur($_SESSION['idmembre']);
 }
 
+// accès au formulaire de modification de ses informations, accessible en tant qu'utilisateur ou admin
 if (isset($_GET['action']) && $_GET['action'] == "modifiermembre") {
   $memController->formModifierMembre($_SESSION['admin']);
 }
 
+// modification des informations personnelles du membre
 if (isset($_POST['validmodifmembre'])) {
   $memController->modifierMembre();
 }
@@ -79,7 +82,7 @@ if (isset($_POST["changementpdp"])) {
 
 // ============================== gestion des projets ==================
 
-// liste des projets dans un tableau HTML
+// liste des projets, création de card bootstrap
 //  https://.../index/php?action=liste
 if (isset($_GET["action"]) && $_GET["action"] == "liste") {
   $projetController->listeProjets();
@@ -93,13 +96,12 @@ if (isset($_GET["action"]) && $_GET["action"] == "infoprojet") {
 
 // formulaire ajout d'un projet : saisie des caractéristiques à ajouter dans la BD
 //  https://.../index/php?action=ajout
-// version 0 : le projet est rattaché automatiquement à un membre déjà présent dans la BD
-//              l'idmembre est en champ caché dans le formulaire
+// le projet est rattaché automatiquement à un membre déjà présent dans la BD
 if (isset($_GET["action"]) && $_GET["action"] == "ajoutprojet") {
   $projetController->formAjoutProjet($_SESSION['idmembre']);
 }
 
-// ajout de l'itineraire dans la base
+// ajout du projet dans la base
 // --> au clic sur le bouton "valider_ajout" du form précédent
 if (isset($_POST["valider_ajout"])) {
   $projetController->ajoutProjet();
@@ -111,25 +113,25 @@ if (isset($_GET["action"]) && $_GET["action"] == "modifprojet") {
 }
 
 //modification d'un projet : enregistrement dans la bd
-// --> au clic sur le bouton "valider_modif" du form précédent
+// --> au clic sur le bouton "Valider" du form précédent
 if (isset($_POST["valider_modif"])) {
   $projetController->modifProjet();
 }
 
-// supression d'un itineraire dans la base
+// supression d'un projet dans la base
 // --> au clic sur le bouton "supprimerprojet" du form précédent
 if (isset($_GET["action"]) && $_GET["action"] == "supprimerprojet") {
   $projetController->supprProjet();
 }
 
-// // recherche des itineraires : construction de la requete SQL en fonction des critères 
-// // de recherche et affichage du résultat dans un tableau HTML 
-// // --> au clic sur le bouton "valider_recher" du form précédent
+// // recherche des projets : construction de la requete SQL en fonction des critères 
+// // de recherche et affichage 
+// // --> au clic sur le bouton "Valider" du form précédent
 if (isset($_POST["recherche"])) {
   $projetController->rechercheProjet();
 }
 
-// Commenter et noter un projet (passe par la même fonction)
+// Commenter et noter un projet (les deux passent par la même fonction)
 if (isset($_POST['envoyercommentaire'])) {
   $projetController->commenterProjet();
 }
@@ -141,18 +143,28 @@ if (isset($_GET['action']) && $_GET['action'] == "paneladmin") {
   $adminController->paneladmin($_SESSION['admin'], $message);
 }
 
+// Validation d'un projet depuis le pannel admin
 if (isset($_GET['action']) && $_GET['action'] == "validerprojet") {
   $adminController->validerProjet($_GET);
 }
 
+// ajouter une catégorie, un tag ou une ressource à la BD
 if (isset($_POST["ajoutercategorie"])) {
   $adminController->adminCategorie();
 }
 
+// supprimer une catégorie, un tag ou une ressource de la BD
+// cela supprime les liens entre catégories/tags/ressources et les projets correspondants
 if (isset($_POST['supprimercategorie'])) {
   $adminController->supprCategorie();
 }
 
+// promouvoir un membre admin et lui donner accès aux commandes administrateurs
 if (isset($_GET['action']) && $_GET['action'] == "promouvoiradmin") {
   $adminController->promouvoirAdmin($_GET);
+}
+
+// supprimer un membre de la BD, supprime également ses contributions
+if (isset($_GET['action']) && $_GET['action'] == "supprimermembre") {
+  $adminController->supprimerMembre($_GET);
 }

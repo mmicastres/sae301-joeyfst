@@ -1,6 +1,6 @@
 <?php
-$server = 'localhost';
-$user = 'fsj3694a';
+$server = 'mysql-fsj.alwaysdata.net';
+$user = 'fsj';
 $passwd = 'P8cff972';
-$database = 'fsj3694a';
+$database = 'fsj_mmiprojects';
 ?>
